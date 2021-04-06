@@ -1,0 +1,62 @@
+package com.epam.esm.web.controller;
+
+import com.epam.esm.model.entity.Tag;
+import com.epam.esm.model.entity.ViewProfileJackson;
+import com.epam.esm.service.TagService;
+import com.epam.esm.service.exeption.RecourseExistException;
+import com.epam.esm.service.exeption.RecourseNotExistException;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Positive;
+
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+
+/**
+ * The  Tag controller with mapping "/tags"
+ * It used for Rest Api
+ *
+ * @author Katerina Charakhovich
+ * @version 1.0.0
+ */
+@RestController
+@RequestMapping(value = "/tags", produces = APPLICATION_JSON_VALUE)
+public class TagController {
+
+    private final TagService tagService;
+
+    @Autowired
+    public TagController(TagService tagService) {
+        this.tagService = tagService;
+    }
+
+    @GetMapping("/{id}")
+    @JsonView(ViewProfileJackson.GetRecourse.class)
+    public ResponseEntity<Tag> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
+        Tag tag = tagService.findEntityById(id);
+        return new ResponseEntity<>(tag, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTag(@PathVariable @Positive long id) throws RecourseNotExistException {
+        tagService.delete(id);
+    }
+
+    /**
+     * Add tag
+     *
+     * @return the tag
+     */
+    @PostMapping
+    @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
+    public ResponseEntity<Tag> addTag(@RequestBody Tag tag) throws RecourseExistException {
+        Tag createTag = tagService.add(tag);
+        return new ResponseEntity<Tag>(tag, HttpStatus.CREATED);
+    }
+
+}

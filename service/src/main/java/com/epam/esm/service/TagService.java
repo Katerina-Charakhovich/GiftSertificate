@@ -1,9 +1,9 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dao.entity.Tag;
+import com.epam.esm.model.entity.Tag;
+import com.epam.esm.service.exeption.RecourseExistException;
 
-import java.util.Optional;
 
-public interface TagService {
-    Optional<Tag> findEntityById(long id) ;
+public interface TagService extends CommonService<Tag>{
+    Tag add(Tag tag) throws RecourseExistException;
 }

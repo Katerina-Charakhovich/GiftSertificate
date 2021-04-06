@@ -1,7 +1,14 @@
 package com.epam.esm.dao.dao;
+
 import java.util.Optional;
 
-public abstract class BaseDao<T> {
+/**
+ * The interface base dao.
+ *
+ * @author Katerina Charakhovich
+ * @version 1.0.0
+ */
+public interface BaseDao<T> {
 
     /**
      * Finds entity by entity id
@@ -9,7 +16,7 @@ public abstract class BaseDao<T> {
      * @param id the entity id
      * @return the t
      */
-    public abstract Optional<T> findEntityById(long id) ;
+    Optional<T> findEntityById(long id);
 
     /**
      * Deletes entity
@@ -17,7 +24,7 @@ public abstract class BaseDao<T> {
      * @param id the entity id
      * @return the boolean
      */
-    public abstract boolean delete(long id) ;
+    boolean delete(long id);
 
     /**
      * Creates entity
@@ -25,7 +32,7 @@ public abstract class BaseDao<T> {
      * @param entity the entity
      * @return the int
      */
-    public abstract int create(T entity) ;
+     T create(T entity);
 
     /**
      * Updates entity
@@ -33,5 +40,5 @@ public abstract class BaseDao<T> {
      * @param entity the entity
      * @return the int
      */
-    public abstract int update(T entity);
+     int update(T entity);
 }

@@ -7,12 +7,19 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
 
 
 @Configuration
+@ComponentScan("com.epam.esm.dao")
+@EnableTransactionManagement
 @PropertySource("classpath:database.properties")
-@ComponentScan("com.epam.esm")
-public class DataSource {
+public class DaoConfig {
+
     private static final String TIME_ZONE_NAME = "serverTimezone";
     @Value("${driverName}")
     private String driverName;
@@ -30,7 +37,7 @@ public class DataSource {
     private String serverTimezone;
 
     @Bean
-    public HikariDataSource hikariDataSource() {
+    public  DataSource dataSource() {
         HikariDataSource hikariDataSource = new HikariDataSource();
         hikariDataSource.setDriverClassName(driverName);
         hikariDataSource.setJdbcUrl(url);
@@ -42,6 +49,11 @@ public class DataSource {
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(hikariDataSource());
+        return new JdbcTemplate(dataSource());
     }
+    @Bean
+    public TransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+
 }

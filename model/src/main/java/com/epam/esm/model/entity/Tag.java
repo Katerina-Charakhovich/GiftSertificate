@@ -1,27 +1,39 @@
-package com.epam.esm.dao.entity;
+package com.epam.esm.model.entity;
 
-public class Tag extends Entity {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import java.io.Serializable;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Tag extends Entity implements Serializable {
+    @JsonView(ViewProfileJackson.GetRecourse.class)
     private long tagId;
+    @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
     private String tagName;
+
+    public long getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(long tagId) {
+        this.tagId = tagId;
+    }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
+    }
+
 
     public Tag() {
     }
 
-    public long getId() {
-        return tagId;
-    }
-
-    public void setId(long id) {
-        this.tagId = id;
-    }
-
-    public String getName() {
-        return tagName;
-    }
-
-    public void setName(String name) {
-        this.tagName = name;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,9 +1,7 @@
 package com.epam.esm.dao.dao;
 
-import com.epam.esm.dao.entity.Tag;
-import org.springframework.jdbc.core.RowMapper;
+import com.epam.esm.model.entity.Tag;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +12,7 @@ import java.util.Optional;
  * @version 1.0.0
  */
 
-public interface TagDao {
+public interface TagDao extends BaseDao<Tag>{
     /**
      * Find Tag by name
      *
@@ -22,12 +20,12 @@ public interface TagDao {
      * @return optional tag
      */
    Optional<Tag> findByName(String tagName);
+
     /**
      * Find list tags by certificate id
      *
      * @param certificateId Certificate id
      * @return list
      */
-     List<Tag> findByCertificateId(long certificateId);
-
+     List<Tag> findListByCertificateId(long certificateId);
 }

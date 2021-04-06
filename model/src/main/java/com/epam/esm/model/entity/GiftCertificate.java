@@ -1,18 +1,60 @@
-package com.epam.esm.dao.entity;
+package com.epam.esm.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class GiftCertificate extends Entity{
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class GiftCertificate extends Entity {
+
     private long id;
+
+    @Size(min = 3, max = 30)
+    @Pattern(regexp = "^[a-zA-Zа-яА-ЯёЁ0-9\\s?!,.:'\\-]+$")
     private String name;
+
+    @Size(min = 3, max = 255)
+    @Pattern(regexp = "^[a-zA-Zа-яА-ЯёЁ0-9\\s?!,.:'\\-]+$")
     private String description;
+
+    @Max(10)
+    @Min(1)
     private int duration;
+
+    @DecimalMin("1")
     private BigDecimal price;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     LocalDateTime lastUpdateDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     LocalDateTime createDate;
 
+    List<Tag> listTag;
+
     public GiftCertificate() {
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public List<Tag> getListTag() {
+        return listTag;
+    }
+
+    public void setListTag(List<Tag> listTag) {
+        this.listTag = listTag;
     }
 
     public long getId() {
@@ -63,14 +105,6 @@ public class GiftCertificate extends Entity{
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public LocalDateTime getCreate_date() {
-        return createDate;
-    }
-
-    public void setCreate_date(LocalDateTime create_date) {
-        this.createDate = create_date;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,18 +118,20 @@ public class GiftCertificate extends Entity{
                 lastUpdateDate.equals(that.lastUpdateDate) &&
                 createDate.equals(that.createDate);
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = (int) (id ^ (id >>> 32));
         result = result * prime + Integer.hashCode(duration);
         result = result * prime + name.hashCode();
-        result=result*prime+description.hashCode();
+        result = result * prime + description.hashCode();
         result = result * prime + price.hashCode();
-        result=result*prime+lastUpdateDate.hashCode();
-        result=result*prime+ createDate.hashCode();
+        result = result * prime + lastUpdateDate.hashCode();
+        result = result * prime + createDate.hashCode();
         return result;
     }
+
     @Override
     public String toString() {
         StringBuilder strResult = new StringBuilder("Certificate {");

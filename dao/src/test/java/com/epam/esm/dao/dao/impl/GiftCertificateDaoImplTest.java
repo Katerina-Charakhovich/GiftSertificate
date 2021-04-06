@@ -1,6 +1,8 @@
 package com.epam.esm.dao.dao.impl;
 
-import org.junit.Ignore;
+import com.epam.esm.dao.mapper.CertificateExtractor;
+import com.epam.esm.dao.mapper.CertificateMapper;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,26 +11,19 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-
 class GiftCertificateDaoImplTest {
+
     private EmbeddedDatabase embeddedDatabase;
-
     private JdbcTemplate jdbcTemplate;
-
     private GiftCertificateDaoImpl giftCertificateDaoImpl;
 
     @BeforeEach
     public void setUp() {
-        // Создадим базу данных для тестирования
         embeddedDatabase = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-                .addScript("classpath:schema.sql").addScript("classpath:data.sql")// Добавляем скрипты schema.sql и data.sql
+                .addScript("classpath:schema.sql").addScript("classpath:data.sql")
                 .build();
-
-        // Создадим JdbcTemplate
         jdbcTemplate = new JdbcTemplate(embeddedDatabase);
-
-        // Создадим PersonRepository
-        giftCertificateDaoImpl = new GiftCertificateDaoImpl(jdbcTemplate);
+        giftCertificateDaoImpl = new GiftCertificateDaoImpl(jdbcTemplate,new CertificateMapper(),new CertificateExtractor());
     }
 
     @AfterEach
@@ -37,15 +32,30 @@ class GiftCertificateDaoImplTest {
     }
 
     @Test
-    @Ignore
-    void findEntityById() {
-       // Assert.assertNotNull(giftCertificateDaoImpl.findEntityById(1));
-        int b=0;
-
+    void findEntityByIdExistCertificate() {
+        Assert.assertNotNull(giftCertificateDaoImpl.findEntityById(1));
+    }
+    @Test
+    void findEntityByIdNotExistCertificate() {
+        Assert.assertTrue(giftCertificateDaoImpl.findEntityById(15).isEmpty());
+    }
+    @Test
+    void findEntityByIdExistCertificateWithoutTags() {
+        Assert.assertNotNull(giftCertificateDaoImpl.findEntityById(4));
     }
 
     @Test
     void delete() {
+        long testId=1;
+        giftCertificateDaoImpl.delete(1);
+        Assert.assertTrue(giftCertificateDaoImpl.findEntityById(1).isEmpty());
+    }
+
+    @Test
+    void deleteLinkTagById() {
+        long testId=1;
+        giftCertificateDaoImpl.deleteLinkTagById(1);
+        Assert.assertEquals(0, giftCertificateDaoImpl.findEntityById(1).get().getListTag().size());
     }
 
     @Test
@@ -55,4 +65,9 @@ class GiftCertificateDaoImplTest {
     @Test
     void update() {
     }
+
+    @Test
+    void testDelete() {
+    }
+
 }
