@@ -38,7 +38,7 @@ class TagDaoImplTest {
     }
     @Test
     void findEntityById() {
-        Optional<Optional<Tag>> tag = Optional.of(tagDaoImpl.findEntityById(1));
+        var tag=tagDaoImpl.findEntityById(1);
         Assert.assertNotNull(tagDaoImpl.findEntityById(1));
     }
 

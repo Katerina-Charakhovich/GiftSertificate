@@ -1,16 +1,19 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.model.entity.GiftCertificate;
-import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.exeption.IllegalRequestParameters;
+import com.epam.esm.service.exeption.IllegalRequestSortParameters;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.constraints.Positive;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -40,9 +43,8 @@ public class GiftCertificateController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<GiftCertificate> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
-        ;
         GiftCertificate giftCertificate = certificateService.findEntityById(id);
-        return new ResponseEntity<GiftCertificate>(giftCertificate, HttpStatus.OK);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
     /**
@@ -60,11 +62,25 @@ public class GiftCertificateController {
     /**
      * Add new GiftCertificate
      *
-     * @param giftCertificate
-     * @throws RecourseExistException  such GiftCertificate is exist
+     * @param giftCertificate param
+     * @throws RecourseExistException such GiftCertificate is exist
      */
     @PostMapping
-    public ResponseEntity< GiftCertificate> addCertificate(@RequestBody GiftCertificate giftCertificate ) throws RecourseExistException {
-            return new ResponseEntity< >(HttpStatus.CREATED);
+    public ResponseEntity<GiftCertificate> addCertificate(@RequestBody GiftCertificate giftCertificate) throws RecourseExistException {
+        GiftCertificate createCertificate = certificateService.add(giftCertificate);
+        return new ResponseEntity<>(createCertificate, HttpStatus.CREATED);
+    }
+
+    /**
+     * Find gift certificates by params
+     *
+     * @param allRequestParam the parameters
+     * @throws IllegalRequestParameters if parameters aren't from list
+     * @throws IllegalRequestSortParameters if sort parameters aren't from list
+     */
+    @GetMapping
+    public ResponseEntity<List<GiftCertificate>> findListCertificate(@RequestParam Map<String, String> allRequestParam)
+            throws IllegalRequestSortParameters,IllegalRequestParameters {
+        return new ResponseEntity<>(certificateService.findGiftCertificateListByParams(allRequestParam), HttpStatus.FOUND);
     }
 }

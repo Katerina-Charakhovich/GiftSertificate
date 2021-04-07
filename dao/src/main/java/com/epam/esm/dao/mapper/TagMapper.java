@@ -1,7 +1,8 @@
 package com.epam.esm.dao.mapper;
 
-import com.epam.esm.dao.dao.TableColumnName;
+
 import com.epam.esm.model.entity.Tag;
+import com.epam.esm.model.parameters.TableColumnName;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

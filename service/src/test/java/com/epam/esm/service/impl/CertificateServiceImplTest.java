@@ -1,7 +1,9 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.dao.GiftCertificateDao;
+import com.epam.esm.dao.dao.TagDao;
 import com.epam.esm.dao.dao.impl.GiftCertificateDaoImpl;
+import com.epam.esm.dao.dao.impl.TagDaoImpl;
 import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
@@ -22,13 +24,16 @@ class CertificateServiceImplTest {
     private CertificateService certificateService;
     @Mock
     GiftCertificateDao certificateDao;
+    @Mock
+    TagDao tagDao;
 
     GiftCertificate giftCertificate;
 
     @BeforeEach
     public void setUp() {
         certificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
-        certificateService = new CertificateServiceImpl(certificateDao);
+        tagDao = Mockito.mock(TagDaoImpl.class);
+        certificateService = new CertificateServiceImpl(certificateDao, tagDao);
         giftCertificate=new GiftCertificate();
         giftCertificate.setId(7);
         giftCertificate.setName("testName");

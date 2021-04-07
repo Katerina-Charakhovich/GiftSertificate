@@ -1,7 +1,9 @@
 package com.epam.esm.dao.dao.impl;
 
+import com.epam.esm.dao.builder.BuilderSql;
 import com.epam.esm.dao.mapper.CertificateExtractor;
 import com.epam.esm.dao.mapper.CertificateMapper;
+import com.epam.esm.model.entity.GiftCertificate;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+
+import java.math.BigDecimal;
+import java.security.cert.Certificate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class GiftCertificateDaoImplTest {
 
@@ -60,6 +68,14 @@ class GiftCertificateDaoImplTest {
 
     @Test
     void create() {
+        GiftCertificate certificate=new GiftCertificate();
+        certificate.setName("testName");
+        certificate.setDescription("testDescription");
+        certificate.setDuration(10);
+        certificate.setPrice(BigDecimal.valueOf(10.02));
+        GiftCertificate createCertificate=giftCertificateDaoImpl.create(certificate);
+        certificate.setId(createCertificate.getId());
+        Assert.assertEquals(certificate,createCertificate);
     }
 
     @Test
@@ -70,4 +86,9 @@ class GiftCertificateDaoImplTest {
     void testDelete() {
     }
 
+    @Test
+    void findEntityByParams() {
+        Map<String,String> groupParams= new HashMap<>();
+        List<GiftCertificate> certificateList=giftCertificateDaoImpl.findEntityByParams(groupParams);
+    }
 }

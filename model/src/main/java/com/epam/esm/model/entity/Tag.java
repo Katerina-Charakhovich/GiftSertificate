@@ -14,6 +14,8 @@ public class Tag extends Entity implements Serializable {
     @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
     private String tagName;
 
+    public Tag() {
+    }
     public long getTagId() {
         return tagId;
     }
@@ -31,8 +33,7 @@ public class Tag extends Entity implements Serializable {
     }
 
 
-    public Tag() {
-    }
+
 
 
     @Override
