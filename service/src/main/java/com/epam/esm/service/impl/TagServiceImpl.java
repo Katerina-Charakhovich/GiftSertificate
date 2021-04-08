@@ -48,7 +48,7 @@ public class TagServiceImpl implements CommonService<Tag>, TagService {
     @Override
     public Tag findEntityById(long id) throws RecourseNotExistException {
         Optional<Tag> optionalTag = tagDao.findEntityById(id);
-        if (optionalTag.isEmpty())
+        if (!optionalTag.isPresent())
             throw new RecourseNotExistException("Tag with id={" + id + " d} doesn't exist");
         return optionalTag.get();
     }

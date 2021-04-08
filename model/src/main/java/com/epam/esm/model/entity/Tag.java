@@ -1,9 +1,13 @@
 package com.epam.esm.model.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -11,11 +15,16 @@ import java.io.Serializable;
 public class Tag extends Entity implements Serializable {
     @JsonView(ViewProfileJackson.GetRecourse.class)
     private long tagId;
+
+
     @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
+    @NotBlank
+    @Size(min = 2, max = 3, message = "Incorrect length ")
     private String tagName;
 
     public Tag() {
     }
+
     public long getTagId() {
         return tagId;
     }
@@ -31,10 +40,6 @@ public class Tag extends Entity implements Serializable {
     public void setTagName(String tagName) {
         this.tagName = tagName;
     }
-
-
-
-
 
     @Override
     public boolean equals(Object o) {
@@ -56,7 +61,7 @@ public class Tag extends Entity implements Serializable {
     @Override
     public String toString() {
         StringBuilder strResult = new StringBuilder("Tag {");
-        strResult.append("{tagId=").append(tagId).append(';');
+        strResult.append("tagId=").append(tagId).append(';');
         strResult.append(", tagName=").append(tagName).append('}');
         return strResult.toString();
     }

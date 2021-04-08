@@ -9,8 +9,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -22,8 +24,11 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  * @author Katerina Charakhovich
  * @version 1.0.0
  */
+
+
 @RestController
 @RequestMapping(value = "/tags", produces = APPLICATION_JSON_VALUE)
+@Validated
 public class TagController {
 
     private final TagService tagService;
@@ -33,6 +38,13 @@ public class TagController {
         this.tagService = tagService;
     }
 
+    /**
+     * Find tag by id
+     *
+     * @param id the id
+     * @return tag
+     * @throws RecourseNotExistException if tag isn't found
+     */
     @GetMapping("/{id}")
     @JsonView(ViewProfileJackson.GetRecourse.class)
     public ResponseEntity<Tag> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
@@ -40,7 +52,12 @@ public class TagController {
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
-
+    /**
+     * Delete tag
+     *
+     * @param id the id
+     * @throws RecourseNotExistException if  such GiftCertificate id isn't found
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteTag(@PathVariable @Positive long id) throws RecourseNotExistException {
@@ -54,9 +71,9 @@ public class TagController {
      */
     @PostMapping
     @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
-    public ResponseEntity<Tag> addTag(@RequestBody Tag tag) throws RecourseExistException {
-        Tag createTag = tagService.add(tag);
-        return new ResponseEntity<Tag>(tag, HttpStatus.CREATED);
+    public ResponseEntity<Tag> addTag(@Valid @RequestBody Tag tag
+    ) throws RecourseExistException {
+        return new ResponseEntity<>(tagService.add(tag), HttpStatus.CREATED);
     }
 
 }

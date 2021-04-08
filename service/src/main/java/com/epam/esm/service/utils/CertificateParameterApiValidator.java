@@ -1,14 +1,14 @@
 package com.epam.esm.service.utils;
 
-import com.epam.esm.model.parameters.CertificateApiParameter;
+import com.epam.esm.model.parameters.CertificateParameter;
 
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CertificateParameterApiValidator {
-    private static final String NAME_PATTERN = "[a-zA-Z]|[а-яА-Я]{0,45}";
-    private static final String DESCRIPTION_PATTERN = "[[[a-zA-Z]|[а-яА-Я]]\\s{.,?\\-!}]{0,1000}";
+    private static final String NAME_PATTERN = "[a-zA-Zа-яА-ЯёЁ0-9\\s?!,.:'\\-]{3,45}";
+    private static final String DESCRIPTION_PATTERN =  "[a-zA-Zа-яА-ЯёЁ0-9\\s?!,.:'\\-]{1,1000}";
     private static final String PARAMETER_SORT = "sort";
 
     public static boolean isValidParams(Map<String, String> groupParameters) {
@@ -21,9 +21,9 @@ public class CertificateParameterApiValidator {
 
     public static boolean isValidParameterNameValue(Map.Entry<String, String> param) {
         boolean result = false;
-        Optional<CertificateApiParameter> apiParam = Arrays
-                .stream(CertificateApiParameter.values())
-                .filter(s -> s.getParamName().equals(param.getKey())).findFirst();
+        Optional<CertificateParameter> apiParam = Arrays
+                .stream(CertificateParameter.values())
+                .filter(s -> s.getName().equals(param.getKey())).findFirst();
         if (apiParam.isPresent()) {
             switch (apiParam.get()) {
                 case TAG_NAME:

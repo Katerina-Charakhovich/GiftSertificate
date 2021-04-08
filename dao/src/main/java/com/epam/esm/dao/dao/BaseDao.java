@@ -1,5 +1,7 @@
 package com.epam.esm.dao.dao;
 
+import com.epam.esm.model.entity.GiftCertificate;
+
 import java.util.Optional;
 
 /**
@@ -40,5 +42,5 @@ public interface BaseDao<T> {
      * @param entity the entity
      * @return the int
      */
-     int update(T entity);
+     T update(T entity);
 }

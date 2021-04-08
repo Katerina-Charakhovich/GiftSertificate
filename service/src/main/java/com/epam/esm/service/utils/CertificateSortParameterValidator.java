@@ -22,7 +22,7 @@ public class CertificateSortParameterValidator {
     public static boolean isValidParameterValue(String value) {
         String tempValue = (value.charAt(0) == MINUS && value.length()>1)?value.substring(1):value;
         Optional<CertificateSortType> sortType=Arrays.stream(CertificateSortType.values())
-                .filter(s -> s.getType().getParamName().toUpperCase().equals(tempValue.toUpperCase()))
+                .filter(s -> s.getType().getName().toUpperCase().equals(tempValue.toUpperCase()))
                         .findFirst();
         return sortType.isPresent();
     }

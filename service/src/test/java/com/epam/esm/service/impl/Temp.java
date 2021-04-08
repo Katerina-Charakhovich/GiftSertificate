@@ -3,15 +3,12 @@ package com.epam.esm.service.impl;
 import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.CertificateService;
-import com.epam.esm.service.TagService;
 import com.epam.esm.service.config.ServiceConfig;
-import com.epam.esm.service.exeption.IllegalRequestParameters;
-import com.epam.esm.service.exeption.IllegalRequestSortParameters;
+import com.epam.esm.service.exeption.IllegalRequestParameterException;
+import com.epam.esm.service.exeption.IllegalRequestSortParameterException;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -46,7 +43,7 @@ public class Temp {
     }
 
     @Test
-    void giftfindbyParams() throws IllegalRequestSortParameters, IllegalRequestParameters {
+    void giftfindbyParams() throws IllegalRequestSortParameterException, IllegalRequestParameterException {
         Map<String,String> groupParams= new HashMap<>();
         groupParams.put("name","certificate");
         groupParams.put("description","desc");

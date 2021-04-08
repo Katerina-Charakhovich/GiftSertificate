@@ -3,7 +3,6 @@ package com.epam.esm.dao.dao.impl;
 
 import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.model.entity.Tag;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /*@SpringJUnitConfig(DaoConfig.class)*/
 class TagDaoImplTest {
@@ -38,15 +39,15 @@ class TagDaoImplTest {
     }
     @Test
     void findEntityById() {
-        var tag=tagDaoImpl.findEntityById(1);
-        Assert.assertNotNull(tagDaoImpl.findEntityById(1));
+        Optional<Tag> tag= tagDaoImpl.findEntityById(1);
+        assertNotNull(tagDaoImpl.findEntityById(1));
     }
 
     @Test
     void delete() {
         long deleteId=1;
         tagDaoImpl.delete(deleteId);
-        Assert.assertEquals(Optional.empty(),tagDaoImpl.findEntityById(1));
+        assertEquals(Optional.empty(), tagDaoImpl.findEntityById(1));
     }
 
     @Test
@@ -54,7 +55,7 @@ class TagDaoImplTest {
         Tag tag=new Tag();
         tag.setTagName("test");
         tag.setTagId(tagDaoImpl.create(tag).getTagId());
-        Assert.assertEquals(tag,tagDaoImpl.findEntityById(tag.getTagId()).get());
+       assertEquals(tag, tagDaoImpl.findEntityById(tag.getTagId()).get());
     }
 
     @Test
@@ -62,6 +63,6 @@ class TagDaoImplTest {
         Tag tag=new Tag();
         tag.setTagName("test");
         tag.setTagId(tagDaoImpl.create(tag).getTagId());
-        Assert.assertEquals(tag.getTagName(),tagDaoImpl.findEntityById(tag.getTagId()).get().getTagName());
+       assertEquals(tag.getTagName(), tagDaoImpl.findEntityById(tag.getTagId()).get().getTagName());
     }
 }

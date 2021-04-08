@@ -7,7 +7,6 @@ import com.epam.esm.dao.dao.impl.TagDaoImpl;
 import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -47,7 +46,7 @@ class CertificateServiceImplTest {
     void findEntityByIdPositive() throws RecourseNotExistException {
         long testId = giftCertificate.getId();
         Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.of(giftCertificate));
-        Assert.assertEquals(giftCertificate,certificateService.findEntityById(testId));
+        assertEquals(giftCertificate,certificateService.findEntityById(testId));
     }
 
     @Test
@@ -63,12 +62,27 @@ class CertificateServiceImplTest {
         Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.of(giftCertificate));
         Mockito.when(certificateDao.deleteLinkTagById(testId)).thenReturn(true);
         Mockito.when(certificateDao.delete(testId)).thenReturn(true);
-        Assert.assertTrue(certificateService.delete(testId));
+        assertTrue(certificateService.delete(testId));
     }
     @Test
     void deleteByIdNegative() {
         long testId = giftCertificate.getId();
         Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.empty());
         assertThrows(RecourseNotExistException.class, () -> certificateService.delete(testId));
+    }
+
+    @Test
+    void addPositive() {
+        long testId = giftCertificate.getId();
+     //   certificateDao.findEntityByParams()
+        Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.empty());
+    }
+
+    @Test
+    void update() {
+    }
+
+    @Test
+    void findGiftCertificateListByParams() {
     }
 }

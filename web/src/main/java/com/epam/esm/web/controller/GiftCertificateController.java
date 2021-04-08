@@ -2,14 +2,17 @@ package com.epam.esm.web.controller;
 
 import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
-import com.epam.esm.service.exeption.IllegalRequestParameters;
-import com.epam.esm.service.exeption.IllegalRequestSortParameters;
+import com.epam.esm.service.exeption.IllegalRequestParameterException;
+import com.epam.esm.service.exeption.IllegalRequestSortParameterException;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping(value = "/certificates", produces = APPLICATION_JSON_VALUE)
+@Validated
 public class GiftCertificateController {
     private final CertificateService certificateService;
 
@@ -55,18 +59,22 @@ public class GiftCertificateController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCertificate(@PathVariable @Positive long id) throws RecourseNotExistException {
+    public void deleteCertificate(
+            @PathVariable @Positive long id)
+            throws RecourseNotExistException {
         certificateService.delete(id);
     }
 
     /**
-     * Add new GiftCertificate
+     * Add new gift certificate
      *
-     * @param giftCertificate param
+     * @param giftCertificate param the gift certificate
      * @throws RecourseExistException such GiftCertificate is exist
      */
-    @PostMapping
-    public ResponseEntity<GiftCertificate> addCertificate(@RequestBody GiftCertificate giftCertificate) throws RecourseExistException {
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<GiftCertificate> addCertificate(
+            @Valid @RequestBody GiftCertificate giftCertificate)
+            throws RecourseExistException {
         GiftCertificate createCertificate = certificateService.add(giftCertificate);
         return new ResponseEntity<>(createCertificate, HttpStatus.CREATED);
     }
@@ -75,12 +83,30 @@ public class GiftCertificateController {
      * Find gift certificates by params
      *
      * @param allRequestParam the parameters
-     * @throws IllegalRequestParameters if parameters aren't from list
-     * @throws IllegalRequestSortParameters if sort parameters aren't from list
+     * @return the list
+     * @throws IllegalRequestParameterException     if parameters aren't from list
+     * @throws IllegalRequestSortParameterException if sort parameters aren't from list
      */
     @GetMapping
-    public ResponseEntity<List<GiftCertificate>> findListCertificate(@RequestParam Map<String, String> allRequestParam)
-            throws IllegalRequestSortParameters,IllegalRequestParameters {
+    public ResponseEntity<List<GiftCertificate>> findListCertificate(
+            @RequestParam Map<String, String> allRequestParam)
+            throws IllegalRequestSortParameterException, IllegalRequestParameterException {
         return new ResponseEntity<>(certificateService.findGiftCertificateListByParams(allRequestParam), HttpStatus.FOUND);
+    }
+
+    /**
+     * Update gift certificate parameters.
+     *
+     * @param id              the id
+     * @param giftCertificate the gift certificate
+     * @return the gift certificate dto
+     * @throws RecourseNotExistException if gift certificate with such id isn't found
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<GiftCertificate> updateCertificate(
+            @PathVariable @Positive long id,
+            @RequestBody GiftCertificate giftCertificate) throws RecourseNotExistException {
+        giftCertificate.setId(id);
+        return new ResponseEntity<>(certificateService.update(giftCertificate), HttpStatus.OK);
     }
 }

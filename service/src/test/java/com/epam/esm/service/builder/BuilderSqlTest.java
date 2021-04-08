@@ -14,7 +14,7 @@ class BuilderSqlTest {
         groupParams.put("name","certificate");
         groupParams.put("description","certificate");
         groupParams.put("sort","-name");
-        String str= BuilderSql.buildFindCertificateByAllParameters(groupParams);
+        String str= BuilderSql.buildFindAndSortCertificateByParameter(groupParams);
         int i=0;
     }
 }

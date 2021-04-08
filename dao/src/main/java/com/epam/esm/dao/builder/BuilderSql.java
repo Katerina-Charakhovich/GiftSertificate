@@ -1,6 +1,6 @@
 package com.epam.esm.dao.builder;
 
-import com.epam.esm.model.parameters.CertificateApiParameter;
+import com.epam.esm.model.parameters.CertificateParameter;
 import com.epam.esm.model.parameters.CertificateSortType;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public class BuilderSql {
     private static final String QUOTES="\"";
     private static final String WHERE="where";
 
-    public static String buildFindCertificateByAllParameters(Map<String, String> groupParameters) {
+    public static String buildFindAndSortCertificateByParameter(Map<String, String> groupParameters) {
         StringBuilder result = new StringBuilder();
         Map<String, String> groupParams = groupParameters.entrySet().stream().
                 filter(s -> !s.getKey().toUpperCase().equals(PARAMETER_SORT.toUpperCase())).
@@ -31,12 +31,12 @@ public class BuilderSql {
                 filter(s -> s.getKey().toUpperCase().equals(PARAMETER_SORT.toUpperCase())).
                 collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return result.
-                append(buildFindCertificateByParameters(groupParams)).
+                append(buildFindCertificateByParameter(groupParams)).
                 append(SPACE).
                 append(buildSortCertificateByParameters(groupSortParams)).toString();
     }
 
-    public static String buildFindCertificateByParameters(Map<String, String> groupParameters) {
+    public static String buildFindCertificateByParameter(Map<String, String> groupParameters) {
         int size = groupParameters.size();
         if (size == 0) {
             return EMPTY;
@@ -46,7 +46,7 @@ public class BuilderSql {
         for (Map.Entry<String, String> entry : groupParameters.entrySet()
         ) {
             resultSql.
-                    append(CertificateApiParameter.getByName(entry.getKey()).get().getParamValue()).
+                    append(CertificateParameter.getByName(entry.getKey()).get().getTableColumn()).
                     append(SPACE).
                     append(LIKE_OPERAND).
                     append(SPACE).
@@ -77,7 +77,7 @@ public class BuilderSql {
                 tempValue = tempValue.substring(1);
                 typeSort = DESC;
             }
-            resultSql.append(CertificateSortType.getByType(tempValue).get().getType().getParamValue()).
+            resultSql.append(CertificateSortType.getByType(tempValue).get().getType().getTableColumn()).
                     append(SPACE).
                     append(typeSort).
                     append(COMMA);

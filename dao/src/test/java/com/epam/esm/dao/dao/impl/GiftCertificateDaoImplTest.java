@@ -1,9 +1,10 @@
 package com.epam.esm.dao.dao.impl;
 
-import com.epam.esm.dao.builder.BuilderSql;
+
 import com.epam.esm.dao.mapper.CertificateExtractor;
 import com.epam.esm.dao.mapper.CertificateMapper;
 import com.epam.esm.model.entity.GiftCertificate;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +15,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.math.BigDecimal;
-import java.security.cert.Certificate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 class GiftCertificateDaoImplTest {
 
@@ -45,7 +42,7 @@ class GiftCertificateDaoImplTest {
     }
     @Test
     void findEntityByIdNotExistCertificate() {
-        Assert.assertTrue(giftCertificateDaoImpl.findEntityById(15).isEmpty());
+        Assert.assertFalse(giftCertificateDaoImpl.findEntityById(15).isPresent());
     }
     @Test
     void findEntityByIdExistCertificateWithoutTags() {
@@ -56,7 +53,7 @@ class GiftCertificateDaoImplTest {
     void delete() {
         long testId=1;
         giftCertificateDaoImpl.delete(1);
-        Assert.assertTrue(giftCertificateDaoImpl.findEntityById(1).isEmpty());
+        Assert.assertFalse(giftCertificateDaoImpl.findEntityById(1).isPresent());
     }
 
     @Test
@@ -80,15 +77,10 @@ class GiftCertificateDaoImplTest {
 
     @Test
     void update() {
+        GiftCertificate giftCertificate=giftCertificateDaoImpl.findEntityById(1).get();
+        giftCertificate.setName("updateName");
+        giftCertificateDaoImpl.update(giftCertificate);
+        Assert.assertEquals(giftCertificate.getName(),giftCertificateDaoImpl.findEntityById(1).get().getName());
     }
 
-    @Test
-    void testDelete() {
-    }
-
-    @Test
-    void findEntityByParams() {
-        Map<String,String> groupParams= new HashMap<>();
-        List<GiftCertificate> certificateList=giftCertificateDaoImpl.findEntityByParams(groupParams);
-    }
 }

@@ -7,17 +7,16 @@ import com.epam.esm.dao.dao.impl.TagDaoImpl;
 import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
 
-import java.util.ArrayList;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /*@SpringJUnitConfig(ServiceConfig.class)*/
@@ -43,7 +42,7 @@ class TagServiceImplTest {
         tag.setTagName("test");
         Mockito.when(tagDao.findEntityById(testId)).thenReturn(Optional.of(tag));
         Tag tag1=tagService.findEntityById(testId);
-        Assert.assertEquals(tag,tagService.findEntityById(testId));
+        assertEquals(tag,tagService.findEntityById(testId));
     }
 
     @Test

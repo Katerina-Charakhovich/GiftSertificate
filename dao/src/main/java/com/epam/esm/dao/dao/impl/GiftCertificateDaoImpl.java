@@ -26,25 +26,38 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     private final CertificateMapper certificateMapper;
     private final CertificateExtractor certificateExtractor;
 
-    private static final String FIND_CERTIFICATE_BY_ID = "select t.certificate_id,t.certificate_name,t.description," +
-            "t.price,t.duration,t.create_date,t.last_update_date," +
-            " t2.id_tag,t2.name_tag" +
-            " from certificate t " +
-            " left  join certificate_tag t1 on t.certificate_id=t1.certificate_id " +
-            " left join tag t2 on t1.id_tag=t2.id_tag " +
-            " where t.certificate_id=?";
-    private static final String DELETE_LINK_TAG_BY_ID = "delete from certificate_tag where certificate_id=?";
-    private static final String DELETE_BY_ID = "delete from certificate where certificate.certificate_id=?";
-    private static final String ADD_NEW_CERTIFICATE = "insert into certificate  " +
-            "(certificate_name,description,price, duration ,create_date,last_update_date ) values (?,?,?,?,?,?)";
-    private static final String ADD_LINK_ONE_TAG = "insert into certificate_tag " +
-            "(certificate_id,id_tag ) values (?,?)";
-    private static final String FIND_CERTIFICATES_BY_PARAMS = "select certificate.certificate_id," +
+    private static final String FIND_CERTIFICATE_BY_ID = "SELECT certificate.certificate_id,certificate.certificate_name," +
+            "certificate.description," +
+            "certificate.price,certificate.duration,certificate.create_date,certificate.last_update_date," +
+            " tag.id_tag,tag.name_tag" +
+            " FROM certificate " +
+            " LEFT JOIN certificate_tag ON certificate.certificate_id=certificate_tag.certificate_id " +
+            " LEFT JOIN tag ON certificate_tag.id_tag=tag.id_tag " +
+            " WHERE certificate.certificate_id=?";
+    private static final String DELETE_LINK_TAG_BY_ID = "DELETE FROM certificate_tag WHERE certificate_id=?";
+    private static final String DELETE_BY_ID = "DELETE FROM certificate WHERE certificate.certificate_id=?";
+    private static final String ADD_NEW_CERTIFICATE = "INSERT INTO certificate  " +
+            "(certificate_name,description,price, duration ,create_date,last_update_date ) VALUES  (?,?,?,?,?,?)";
+    private static final String ADD_LINK_ONE_TAG = "INSERT INTO certificate_tag " +
+            "(certificate_id,id_tag ) VALUES (?,?)";
+    private static final String FIND_CERTIFICATES_BY_PARAMS = "SELECT certificate.certificate_id," +
             "certificate.certificate_name,certificate.description,certificate.price,certificate.duration," +
             "certificate.create_date,certificate.last_update_date, " +
-            "tag.id_tag,tag.name_tag from certificate " +
-            "left join certificate_tag on certificate.certificate_id=certificate_tag.certificate_id " +
-            "left join tag on tag.id_tag=certificate_tag.id_tag";
+            "tag.id_tag,tag.name_tag FROM certificate " +
+            "LEFT JOIN  certificate_tag ON certificate.certificate_id=certificate_tag.certificate_id " +
+            "LEFT JOIN tag ON tag.id_tag=certificate_tag.id_tag";
+    public static final String UPDATE_CERTIFICATE = "UPDATE certificate SET "
+            + "certificate.certificate_name = ?, certificate.description = ?, certificate.price = ?," +
+            " certificate.duration = ?, certificate.create_date = ?, "
+            + "last_update_date = ? WHERE certificate.certificate_id = ?";
+    private static final String FIND_BY_NAME = "SELECT certificate.certificate_id,certificate.certificate_name, " +
+            "certificate.description, certificate.price,certificate.duration,certificate.create_date, " +
+            "certificate.last_update_date, " +
+            " tag.id_tag,tag.name_tag" +
+            " FROM certificate " +
+            " LEFT JOIN certificate_tag ON certificate.certificate_id=certificate_tag.certificate_id " +
+            " LEFT JOIN tag ON certificate_tag.id_tag=tag.id_tag " +
+            " WHERE certificate.certificate_name=?";
 
     @Autowired
     public GiftCertificateDaoImpl(JdbcTemplate jdbcTemplate, CertificateMapper certificateMapper, CertificateExtractor certificateExtractor) {
@@ -55,7 +68,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public Optional<GiftCertificate> findEntityById(long id) {
-        Optional<GiftCertificate> optionalCertificate = Optional.empty();
         List<GiftCertificate> certificateList = jdbcTemplate.query(FIND_CERTIFICATE_BY_ID, certificateExtractor, id);
         assert certificateList != null;
         return certificateList.isEmpty() ? Optional.empty() : Optional.of(certificateList.get(0));
@@ -79,17 +91,23 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
             preparedStatement.setLong(2, tagId);
             return preparedStatement;
         };
-        return jdbcTemplate.update(preparedStatementCreator)>0;
+        return jdbcTemplate.update(preparedStatementCreator) > 0;
     }
 
     @Override
     public List<GiftCertificate> findEntityByParams(Map<String, String> groupParams) {
         String sql = FIND_CERTIFICATES_BY_PARAMS +
-                BuilderSql.buildFindCertificateByAllParameters(groupParams);
+                BuilderSql.buildFindAndSortCertificateByParameter(groupParams);
         return jdbcTemplate.query(sql, certificateExtractor);
 
     }
 
+    @Override
+    public Optional<GiftCertificate> findByName(String certificateName) {
+        List<GiftCertificate> certificateList = jdbcTemplate.query(FIND_BY_NAME, certificateExtractor, certificateName);
+        assert certificateList != null;
+        return certificateList.isEmpty() ? Optional.empty() : Optional.of(certificateList.get(0));
+    }
 
     @Override
     public GiftCertificate create(GiftCertificate entity) {
@@ -114,9 +132,13 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public int update(GiftCertificate entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public GiftCertificate update(GiftCertificate entity) {
+        jdbcTemplate.update(UPDATE_CERTIFICATE, entity.getName(), entity.getDescription(),
+                entity.getPrice(), entity.getDuration(), Timestamp.valueOf(LocalDateTime.now()),
+                Timestamp.valueOf(LocalDateTime.now()), entity.getId());
+        return entity;
     }
 
-
 }
+
+

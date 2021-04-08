@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -22,13 +23,13 @@ public class TagDaoImpl implements TagDao {
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger(TagDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final TagMapper tagMapper;
-    private static final String FIND_TAG_BY_ID = "select tag.id_tag, tag.name_tag  from  tag where tag.id_tag=?";
-    private static final String FIND_TAGS_BY_CERTIFICATE_ID = "select t.id_tag, t.name_tag  from  tag t" +
-            " join certificate_tag t1 on t.id_tag=t1.id_tag" +
-            " where t1.certificate_id=?";
-    private static final String FIND_TAG_BY_NAME = "select id_tag, name_tag  from tag where name_tag like ?";
-    private static final String DELETE_TAG_BY_ID = "delete from tag where id_tag=?";
-    public static final String ADD_TAG = "insert into tag (name_tag) values (?)";
+    private static final String FIND_TAG_BY_ID = "SELECT tag.id_tag, tag.name_tag  FROM  tag WHERE tag.id_tag=?";
+    private static final String FIND_TAGS_BY_CERTIFICATE_ID = "SELECT tag.id_tag, tag.name_tag  FROM  tag " +
+            " JOIN certificate_tag ON tag.id_tag=certificate_tag.id_tag" +
+            " WHERE certificate_tag.certificate_id=?";
+    private static final String FIND_TAG_BY_NAME = "SELECT tag.id_tag, tag.name_tag  FROM tag WHERE tag.name_tag LIKE ?";
+    private static final String DELETE_TAG_BY_ID = "DELETE FROM tag WHERE tag.id_tag=?";
+    public static final String ADD_TAG = "INSERT INTO tag (name_tag) VALUES  (?)";
 
     @Autowired
     public TagDaoImpl(JdbcTemplate jdbcTemplate, TagMapper tagMapper) {
@@ -66,7 +67,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public int update(Tag entity) {
+    public Tag update(Tag entity) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
