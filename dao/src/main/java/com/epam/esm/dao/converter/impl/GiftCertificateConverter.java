@@ -23,9 +23,7 @@ public class GiftCertificateConverter implements Converter<GiftCertificate, Gift
 
     public GiftCertificateDto convertTo(GiftCertificate entity) {
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
-        if (entity.getId() !=0) {
-            giftCertificateDto.setId(entity.getId());
-        }
+        giftCertificateDto.setId(entity.getId());
         giftCertificateDto.setName(entity.getName());
         giftCertificateDto.setDescription(entity.getDescription());
         giftCertificateDto.setPrice(entity.getPrice());
@@ -43,7 +41,7 @@ public class GiftCertificateConverter implements Converter<GiftCertificate, Gift
     @Override
     public GiftCertificate convertFrom(GiftCertificateDto entity) {
         GiftCertificate giftCertificate = new GiftCertificate();
-        if (entity.getId() !=0) {
+        if (entity.getId() != 0) {
             giftCertificate.setId(entity.getId());
         }
         giftCertificate.setName(entity.getName());
@@ -57,10 +55,6 @@ public class GiftCertificateConverter implements Converter<GiftCertificate, Gift
 
     @Override
     public List<GiftCertificateDto> convertTo(List<GiftCertificate> entities) {
-        List<GiftCertificateDto> giftCertificatesDto = new ArrayList<>();
-        if (!entities.isEmpty()) {
-            giftCertificatesDto = entities.stream().map(this::convertTo).collect(Collectors.toList());
-        }
-        return giftCertificatesDto;
+        return entities.stream().map(this::convertTo).collect(Collectors.toList());
     }
 }

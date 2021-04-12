@@ -68,20 +68,11 @@ public class BuilderSql {
         if (groupParameters.size() == 0) {
             return EMPTY;
         }
-        StringBuilder resultSql = new StringBuilder(ORDER).append(SPACE);
-        for (Map.Entry<String, String> entry : groupParameters.entrySet()
-        ) {
-            String entryValue = entry.getValue();
-            String typeSort = ASC;
-            if (entryValue.charAt(0) == MINUS) {
-                entryValue = entryValue.substring(1);
-                typeSort = DESC;
-            }
-            resultSql.append(CertificateSortType.getByType(entryValue).get().getType().getTableColumn()).
-                    append(SPACE).
-                    append(typeSort).
-                    append(COMMA);
-        }
-        return resultSql.delete(resultSql.length() - 1, resultSql.length()).toString();
+        StringBuilder resultSql = new StringBuilder(ORDER).append(SPACE).append(groupParameters.values().stream().
+                map(s -> (s.charAt(0) == MINUS ?
+                        CertificateSortType.getByType(s.substring(1)).get().getType().getTableColumn() + SPACE + DESC :
+                        CertificateSortType.getByType(s).get().getType().getTableColumn() + SPACE + ASC)).
+                collect(Collectors.joining(COMMA)));
+        return resultSql.toString();
     }
 }

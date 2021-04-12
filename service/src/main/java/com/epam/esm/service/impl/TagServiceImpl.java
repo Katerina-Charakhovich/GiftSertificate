@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.model.entity.TagDto;
+import com.epam.esm.model.parameters.CustomErrorCode;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
@@ -25,7 +26,7 @@ public class TagServiceImpl implements TagService {
     public TagDto add(TagDto tagDto) throws RecourseExistException {
         Optional<TagDto> optionalTag = tagDao.findByName(tagDto.getTagName());
         if (optionalTag.isPresent())
-            throw new RecourseExistException("Tag with name={" + tagDto.getTagName() + "} exists");
+            throw new RecourseExistException(CustomErrorCode.RECOURSE_TAG_EXIST,"Tag with name={" + tagDto.getTagName() + "} exists");
         return tagDao.create(tagDto);
     }
 
@@ -38,7 +39,7 @@ public class TagServiceImpl implements TagService {
     public boolean delete(long id) throws RecourseNotExistException {
         Optional<TagDto> optionalTag = tagDao.findEntityById(id);
         if (!optionalTag.isPresent())
-            throw new RecourseNotExistException("Tag with id={" + id + " d} doesn't exist");
+            throw new RecourseNotExistException(CustomErrorCode.RECOURSE_TAG_NOT_EXIST,"Tag with id={" + id + "} doesn't exist");
         return tagDao.delete(id);
     }
 
@@ -46,7 +47,7 @@ public class TagServiceImpl implements TagService {
     public TagDto findEntityById(long id) throws RecourseNotExistException {
         Optional<TagDto> optionalTag = tagDao.findEntityById(id);
         if (!optionalTag.isPresent())
-            throw new RecourseNotExistException("Tag with id={" + id + " d} doesn't exist");
+            throw new RecourseNotExistException(CustomErrorCode.RECOURSE_TAG_NOT_EXIST,"Tag with id={" + id + "} doesn't exist");
         return optionalTag.get();
     }
 }

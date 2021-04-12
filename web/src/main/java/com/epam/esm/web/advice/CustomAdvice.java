@@ -1,4 +1,5 @@
 package com.epam.esm.web.advice;
+import com.epam.esm.model.parameters.CustomErrorCode;
 import com.epam.esm.service.exeption.IllegalRequestParameterException;
 import com.epam.esm.service.exeption.IllegalRequestSortParameterException;
 import com.epam.esm.service.exeption.RecourseExistException;
@@ -22,7 +23,7 @@ public class CustomAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse response = new ErrorResponse();
         response.setMessage(e.getMessage());
         response.setLocalDateTime(LocalDateTime.now());
-        response.setStatusCode(CustomErrorCode.RECOURSE_EXIST.getStatusCode());
+        response.setStatusCode(e.getCustomErrorCode().getStatusCode());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
@@ -31,7 +32,7 @@ public class CustomAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse response = new ErrorResponse();
         response.setMessage(e.getMessage());
         response.setLocalDateTime(LocalDateTime.now());
-        response.setStatusCode(CustomErrorCode.RECOURSE_NOT_EXIST.getStatusCode());
+        response.setStatusCode(e.getCustomErrorCode().getStatusCode());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -40,7 +41,7 @@ public class CustomAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse response = new ErrorResponse();
         response.setMessage(e.getMessage());
         response.setLocalDateTime(LocalDateTime.now());
-        response.setStatusCode(CustomErrorCode.ILLEGAL_SORT_PARAMETER.getStatusCode());
+        response.setStatusCode(e.getCustomErrorCode().getStatusCode());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -59,7 +60,7 @@ public class CustomAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse response = new ErrorResponse();
         response.setMessage(e.getMessage());
         response.setLocalDateTime(LocalDateTime.now());
-        response.setStatusCode(CustomErrorCode.ILLEGAL_SORT_PARAMETER.getStatusCode());
+        response.setStatusCode(e.getCustomErrorCode().getStatusCode());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
