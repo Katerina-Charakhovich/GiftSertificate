@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-
 @Configuration
 @ComponentScan("com.epam.esm.dao")
 @EnableTransactionManagement
@@ -37,7 +36,7 @@ public class DaoConfig {
     private String serverTimezone;
 
     @Bean
-    public  DataSource dataSource() {
+    public DataSource dataSource() {
         HikariDataSource hikariDataSource = new HikariDataSource();
         hikariDataSource.setDriverClassName(driverName);
         hikariDataSource.setJdbcUrl(url);
@@ -51,9 +50,9 @@ public class DaoConfig {
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
     }
+
     @Bean
     public TransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
-
 }

@@ -15,7 +15,6 @@ public class CertificateSortParameterValidator {
         Map<String, String> groupSortParameters = groupParameters.entrySet().stream().
                 filter(s -> s.getKey().toUpperCase().equals(PARAMETER_SORT.toUpperCase())).
                 collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        boolean b= groupSortParameters.entrySet().stream().allMatch(s -> isValidParameterValue(s.getValue()));
         return groupSortParameters.entrySet().stream().anyMatch(s -> isValidParameterValue(s.getValue()));
     }
 

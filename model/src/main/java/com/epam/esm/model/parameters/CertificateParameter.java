@@ -8,7 +8,6 @@ public enum CertificateParameter {
     CERTIFICATE_NAME("name", TableColumnName.CERTIFICATE_DAO_NAME),
     CERTIFICATE_DESCRIPTION("description", TableColumnName.CERTIFICATE_DAO_DESCRIPTION),
     CREATE_DATE("createDate", TableColumnName.CERTIFICATE_DAO_CREATE_DATE);
-
     String name;
     String tableColumn;
 
@@ -25,7 +24,7 @@ public enum CertificateParameter {
         return tableColumn;
     }
 
-    public static Optional<CertificateParameter> getByName (String name) {
+    public static Optional<CertificateParameter> getByName(String name) {
         return Arrays
                 .stream(CertificateParameter.values())
                 .filter(s -> s.getName().equals(name)).findFirst();

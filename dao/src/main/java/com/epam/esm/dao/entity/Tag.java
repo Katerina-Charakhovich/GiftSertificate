@@ -1,25 +1,7 @@
-package com.epam.esm.model.entity;
+package com.epam.esm.dao.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
-
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Tag extends Entity implements Serializable {
-    @JsonView(ViewProfileJackson.GetRecourse.class)
+public class Tag extends Entity {
     private long tagId;
-
-
-    @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
-    @NotBlank
-    @Size(min = 2, max = 3, message = "Incorrect length ")
     private String tagName;
 
     public Tag() {

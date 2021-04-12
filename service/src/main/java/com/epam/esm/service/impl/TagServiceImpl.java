@@ -1,8 +1,7 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.dao.TagDao;
-import com.epam.esm.model.entity.Tag;
-import com.epam.esm.service.CommonService;
+import com.epam.esm.dao.TagDao;
+import com.epam.esm.model.entity.TagDto;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
@@ -13,9 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-public class TagServiceImpl implements CommonService<Tag>, TagService {
+public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
-
 
     @Autowired
     public TagServiceImpl(TagDao tagDao) {
@@ -24,30 +22,29 @@ public class TagServiceImpl implements CommonService<Tag>, TagService {
 
     @Override
     @Transactional
-    public Tag add(Tag tag) throws RecourseExistException {
-        Optional<Tag> optionalTag = tagDao.findByName(tag.getTagName());
+    public TagDto add(TagDto tagDto) throws RecourseExistException {
+        Optional<TagDto> optionalTag = tagDao.findByName(tagDto.getTagName());
         if (optionalTag.isPresent())
-            throw new RecourseExistException("Tag with name={" + tag.getTagName() + "} exists");
-        return tagDao.create(tag);
+            throw new RecourseExistException("Tag with name={" + tagDto.getTagName() + "} exists");
+        return tagDao.create(tagDto);
     }
 
     @Override
-    public Tag update(Tag tag) {
-        return null;
+    public TagDto update(TagDto tagDto) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-
 
     @Override
     public boolean delete(long id) throws RecourseNotExistException {
-        Optional<Tag> optionalTag = tagDao.findEntityById(id);
+        Optional<TagDto> optionalTag = tagDao.findEntityById(id);
         if (!optionalTag.isPresent())
             throw new RecourseNotExistException("Tag with id={" + id + " d} doesn't exist");
         return tagDao.delete(id);
     }
 
     @Override
-    public Tag findEntityById(long id) throws RecourseNotExistException {
-        Optional<Tag> optionalTag = tagDao.findEntityById(id);
+    public TagDto findEntityById(long id) throws RecourseNotExistException {
+        Optional<TagDto> optionalTag = tagDao.findEntityById(id);
         if (!optionalTag.isPresent())
             throw new RecourseNotExistException("Tag with id={" + id + " d} doesn't exist");
         return optionalTag.get();

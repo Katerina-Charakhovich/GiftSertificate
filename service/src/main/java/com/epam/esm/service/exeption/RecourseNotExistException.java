@@ -4,4 +4,8 @@ public class RecourseNotExistException extends Exception{
     public RecourseNotExistException(String message) {
         super(message);
     }
+
+    public RecourseNotExistException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

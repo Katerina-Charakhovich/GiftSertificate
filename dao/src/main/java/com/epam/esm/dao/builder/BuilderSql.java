@@ -19,16 +19,16 @@ public class BuilderSql {
     public static final String EMPTY = "";
     private static final char MINUS = '-';
     private static final String AND = "AND";
-    private static final String QUOTES="\"";
-    private static final String WHERE="where";
+    private static final String QUOTES = "\"";
+    private static final String WHERE = "where";
 
     public static String buildFindAndSortCertificateByParameter(Map<String, String> groupParameters) {
         StringBuilder result = new StringBuilder();
         Map<String, String> groupParams = groupParameters.entrySet().stream().
-                filter(s -> !s.getKey().toUpperCase().equals(PARAMETER_SORT.toUpperCase())).
+                filter(s -> !s.getKey().equalsIgnoreCase(PARAMETER_SORT)).
                 collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         Map<String, String> groupSortParams = groupParameters.entrySet().stream().
-                filter(s -> s.getKey().toUpperCase().equals(PARAMETER_SORT.toUpperCase())).
+                filter(s -> s.getKey().equalsIgnoreCase(PARAMETER_SORT)).
                 collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return result.
                 append(buildFindCertificateByParameter(groupParams)).
@@ -71,18 +71,17 @@ public class BuilderSql {
         StringBuilder resultSql = new StringBuilder(ORDER).append(SPACE);
         for (Map.Entry<String, String> entry : groupParameters.entrySet()
         ) {
-            String tempValue = entry.getValue();
+            String entryValue = entry.getValue();
             String typeSort = ASC;
-            if (tempValue.charAt(0) == MINUS) {
-                tempValue = tempValue.substring(1);
+            if (entryValue.charAt(0) == MINUS) {
+                entryValue = entryValue.substring(1);
                 typeSort = DESC;
             }
-            resultSql.append(CertificateSortType.getByType(tempValue).get().getType().getTableColumn()).
+            resultSql.append(CertificateSortType.getByType(entryValue).get().getType().getTableColumn()).
                     append(SPACE).
                     append(typeSort).
                     append(COMMA);
         }
         return resultSql.delete(resultSql.length() - 1, resultSql.length()).toString();
     }
-
 }

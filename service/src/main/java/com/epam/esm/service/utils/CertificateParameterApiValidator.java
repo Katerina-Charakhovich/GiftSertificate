@@ -13,7 +13,7 @@ public class CertificateParameterApiValidator {
 
     public static boolean isValidParams(Map<String, String> groupParameters) {
         Map<String, String> groupParams = groupParameters.entrySet().stream().
-                filter(s -> !s.getKey().toUpperCase().equals(PARAMETER_SORT.toUpperCase())).
+                filter(s -> !s.getKey().equalsIgnoreCase(PARAMETER_SORT)).
                 collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return groupParams.entrySet().stream().allMatch(CertificateParameterApiValidator::isValidParameterNameValue);
 
@@ -31,6 +31,7 @@ public class CertificateParameterApiValidator {
                     break;
                 case CERTIFICATE_NAME:
                     result = Pattern.matches(NAME_PATTERN, param.getValue());
+                    break;
                 case CERTIFICATE_DESCRIPTION:
                     result = Pattern.matches(DESCRIPTION_PATTERN, param.getValue());
                     break;

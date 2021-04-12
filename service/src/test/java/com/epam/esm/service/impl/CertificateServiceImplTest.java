@@ -1,10 +1,10 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.dao.GiftCertificateDao;
-import com.epam.esm.dao.dao.TagDao;
-import com.epam.esm.dao.dao.impl.GiftCertificateDaoImpl;
-import com.epam.esm.dao.dao.impl.TagDaoImpl;
-import com.epam.esm.model.entity.GiftCertificate;
+import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
+import com.epam.esm.dao.impl.TagDaoImpl;
+import com.epam.esm.dao.TagDao;
+import com.epam.esm.model.entity.GiftCertificateDto;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -25,15 +26,15 @@ class CertificateServiceImplTest {
     GiftCertificateDao certificateDao;
     @Mock
     TagDao tagDao;
-
-    GiftCertificate giftCertificate;
+    @Mock
+    GiftCertificateDto giftCertificate;
 
     @BeforeEach
     public void setUp() {
         certificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
         tagDao = Mockito.mock(TagDaoImpl.class);
         certificateService = new CertificateServiceImpl(certificateDao, tagDao);
-        giftCertificate=new GiftCertificate();
+        giftCertificate = new GiftCertificateDto();
         giftCertificate.setId(7);
         giftCertificate.setName("testName");
         giftCertificate.setDescription("testDescription");
@@ -42,11 +43,12 @@ class CertificateServiceImplTest {
         giftCertificate.setCreateDate(LocalDateTime.now());
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
     }
+
     @Test
     void findEntityByIdPositive() throws RecourseNotExistException {
         long testId = giftCertificate.getId();
         Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.of(giftCertificate));
-        assertEquals(giftCertificate,certificateService.findEntityById(testId));
+        assertEquals(giftCertificate, certificateService.findEntityById(testId));
     }
 
     @Test
@@ -64,6 +66,7 @@ class CertificateServiceImplTest {
         Mockito.when(certificateDao.delete(testId)).thenReturn(true);
         assertTrue(certificateService.delete(testId));
     }
+
     @Test
     void deleteByIdNegative() {
         long testId = giftCertificate.getId();
@@ -74,15 +77,6 @@ class CertificateServiceImplTest {
     @Test
     void addPositive() {
         long testId = giftCertificate.getId();
-     //   certificateDao.findEntityByParams()
         Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.empty());
-    }
-
-    @Test
-    void update() {
-    }
-
-    @Test
-    void findGiftCertificateListByParams() {
     }
 }

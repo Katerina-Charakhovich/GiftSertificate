@@ -1,6 +1,6 @@
 package com.epam.esm.web.controller;
 
-import com.epam.esm.model.entity.GiftCertificate;
+import com.epam.esm.model.entity.GiftCertificateDto;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.IllegalRequestParameterException;
 import com.epam.esm.service.exeption.IllegalRequestSortParameterException;
@@ -46,8 +46,8 @@ public class GiftCertificateController {
      * @throws RecourseNotExistException if certificate isn't found
      */
     @GetMapping("/{id}")
-    public ResponseEntity<GiftCertificate> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
-        GiftCertificate giftCertificate = certificateService.findEntityById(id);
+    public ResponseEntity<GiftCertificateDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
+        GiftCertificateDto giftCertificate = certificateService.findEntityById(id);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
@@ -72,10 +72,10 @@ public class GiftCertificateController {
      * @throws RecourseExistException such GiftCertificate is exist
      */
     @PostMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<GiftCertificate> addCertificate(
-            @Valid @RequestBody GiftCertificate giftCertificate)
+    public ResponseEntity<GiftCertificateDto> addCertificate(
+            @Valid @RequestBody GiftCertificateDto giftCertificate)
             throws RecourseExistException {
-        GiftCertificate createCertificate = certificateService.add(giftCertificate);
+        GiftCertificateDto createCertificate = certificateService.add(giftCertificate);
         return new ResponseEntity<>(createCertificate, HttpStatus.CREATED);
     }
 
@@ -88,7 +88,7 @@ public class GiftCertificateController {
      * @throws IllegalRequestSortParameterException if sort parameters aren't from list
      */
     @GetMapping
-    public ResponseEntity<List<GiftCertificate>> findListCertificate(
+    public ResponseEntity<List<GiftCertificateDto>> findListCertificate(
             @RequestParam Map<String, String> allRequestParam)
             throws IllegalRequestSortParameterException, IllegalRequestParameterException {
         return new ResponseEntity<>(certificateService.findGiftCertificateListByParams(allRequestParam), HttpStatus.FOUND);
@@ -103,9 +103,9 @@ public class GiftCertificateController {
      * @throws RecourseNotExistException if gift certificate with such id isn't found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<GiftCertificate> updateCertificate(
+    public ResponseEntity<GiftCertificateDto> updateCertificate(
             @PathVariable @Positive long id,
-            @RequestBody GiftCertificate giftCertificate) throws RecourseNotExistException {
+            @RequestBody GiftCertificateDto giftCertificate) throws RecourseNotExistException {
         giftCertificate.setId(id);
         return new ResponseEntity<>(certificateService.update(giftCertificate), HttpStatus.OK);
     }

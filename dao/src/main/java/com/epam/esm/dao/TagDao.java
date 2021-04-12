@@ -1,6 +1,6 @@
-package com.epam.esm.dao.dao;
+package com.epam.esm.dao;
 
-import com.epam.esm.model.entity.Tag;
+import com.epam.esm.model.entity.TagDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,14 +12,14 @@ import java.util.Optional;
  * @version 1.0.0
  */
 
-public interface TagDao extends BaseDao<Tag>{
+public interface TagDao extends BaseDao<TagDto>{
     /**
      * Find Tag by name
      *
      * @param tagName Tag name
      * @return optional tag
      */
-   Optional<Tag> findByName(String tagName);
+   Optional<TagDto> findByName(String tagName);
 
     /**
      * Find list tags by certificate id
@@ -27,5 +27,5 @@ public interface TagDao extends BaseDao<Tag>{
      * @param certificateId Certificate id
      * @return list
      */
-     List<Tag> findListByCertificateId(long certificateId);
+     List<TagDto> findListByCertificateId(long certificateId);
 }

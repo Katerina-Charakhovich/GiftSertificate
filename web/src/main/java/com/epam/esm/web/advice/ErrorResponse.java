@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
-
     private String message;
     private String debugMessage;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
@@ -49,4 +49,3 @@ public class ErrorResponse {
         this.statusCode = statusCode;
     }
 }
-

@@ -1,12 +1,13 @@
 package com.epam.esm.dao.mapper;
 
-import com.epam.esm.model.entity.GiftCertificate;
+import com.epam.esm.dao.entity.GiftCertificate;
 import com.epam.esm.model.parameters.TableColumnName;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 /**
  * The  Certificate RowMapper.
  *
@@ -19,7 +20,6 @@ public class CertificateMapper implements RowMapper<GiftCertificate> {
     public GiftCertificate mapRow(ResultSet rs, int rowNum) throws SQLException {
         GiftCertificate certificate = new GiftCertificate();
         certificate.setId(rs.getLong(TableColumnName.CERTIFICATE_DAO_ID));
-        certificate.setName(rs.getString(TableColumnName.CERTIFICATE_DAO_NAME));
         certificate.setName(rs.getString(TableColumnName.CERTIFICATE_DAO_NAME));
         certificate.setDescription(rs.getString(TableColumnName.CERTIFICATE_DAO_DESCRIPTION));
         certificate.setDuration(rs.getInt(TableColumnName.CERTIFICATE_DAO_DURATION));

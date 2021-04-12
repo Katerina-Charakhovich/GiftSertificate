@@ -1,6 +1,6 @@
 package com.epam.esm.web.controller;
 
-import com.epam.esm.model.entity.Tag;
+import com.epam.esm.model.entity.TagDto;
 import com.epam.esm.model.entity.ViewProfileJackson;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exeption.RecourseExistException;
@@ -24,13 +24,10 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  * @author Katerina Charakhovich
  * @version 1.0.0
  */
-
-
 @RestController
 @RequestMapping(value = "/tags", produces = APPLICATION_JSON_VALUE)
 @Validated
 public class TagController {
-
     private final TagService tagService;
 
     @Autowired
@@ -47,9 +44,9 @@ public class TagController {
      */
     @GetMapping("/{id}")
     @JsonView(ViewProfileJackson.GetRecourse.class)
-    public ResponseEntity<Tag> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
-        Tag tag = tagService.findEntityById(id);
-        return new ResponseEntity<>(tag, HttpStatus.OK);
+    public ResponseEntity<TagDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
+        TagDto tagDto = tagService.findEntityById(id);
+        return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
     /**
@@ -71,9 +68,8 @@ public class TagController {
      */
     @PostMapping
     @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
-    public ResponseEntity<Tag> addTag(@Valid @RequestBody Tag tag
+    public ResponseEntity<TagDto> addTag(@Valid @RequestBody TagDto tagDto
     ) throws RecourseExistException {
-        return new ResponseEntity<>(tagService.add(tag), HttpStatus.CREATED);
+        return new ResponseEntity<>(tagService.add(tagDto), HttpStatus.CREATED);
     }
-
 }

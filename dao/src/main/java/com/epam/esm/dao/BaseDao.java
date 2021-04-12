@@ -1,6 +1,4 @@
-package com.epam.esm.dao.dao;
-
-import com.epam.esm.model.entity.GiftCertificate;
+package com.epam.esm.dao;
 
 import java.util.Optional;
 
