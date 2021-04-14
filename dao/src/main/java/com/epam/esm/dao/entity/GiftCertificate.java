@@ -2,8 +2,10 @@ package com.epam.esm.dao.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class GiftCertificate extends Entity{
+public class GiftCertificate extends Entity {
+
     private long id;
     private String name;
     private String description;
@@ -11,8 +13,25 @@ public class GiftCertificate extends Entity{
     private BigDecimal price;
     LocalDateTime lastUpdateDate;
     LocalDateTime createDate;
+    List<Tag> listTag;
 
     public GiftCertificate() {
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public List<Tag> getListTag() {
+        return listTag;
+    }
+
+    public void setListTag(List<Tag> listTag) {
+        this.listTag = listTag;
     }
 
     public long getId() {
@@ -63,14 +82,6 @@ public class GiftCertificate extends Entity{
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public LocalDateTime getCreate_date() {
-        return createDate;
-    }
-
-    public void setCreate_date(LocalDateTime create_date) {
-        this.createDate = create_date;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,18 +95,20 @@ public class GiftCertificate extends Entity{
                 lastUpdateDate.equals(that.lastUpdateDate) &&
                 createDate.equals(that.createDate);
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = (int) (id ^ (id >>> 32));
         result = result * prime + Integer.hashCode(duration);
         result = result * prime + name.hashCode();
-        result=result*prime+description.hashCode();
+        result = result * prime + description.hashCode();
         result = result * prime + price.hashCode();
-        result=result*prime+lastUpdateDate.hashCode();
-        result=result*prime+ createDate.hashCode();
+        result = result * prime + lastUpdateDate.hashCode();
+        result = result * prime + createDate.hashCode();
         return result;
     }
+
     @Override
     public String toString() {
         StringBuilder strResult = new StringBuilder("Certificate {");

@@ -7,20 +7,20 @@ public class Tag extends Entity {
     public Tag() {
     }
 
-    public long getId() {
+    public long getTagId() {
         return tagId;
     }
 
-    public void setId(long id) {
-        this.tagId = id;
+    public void setTagId(long tagId) {
+        this.tagId = tagId;
     }
 
-    public String getName() {
+    public String getTagName() {
         return tagName;
     }
 
-    public void setName(String name) {
-        this.tagName = name;
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Tag extends Entity {
     @Override
     public String toString() {
         StringBuilder strResult = new StringBuilder("Tag {");
-        strResult.append("{tagId=").append(tagId).append(';');
+        strResult.append("tagId=").append(tagId).append(';');
         strResult.append(", tagName=").append(tagName).append('}');
         return strResult.toString();
     }
