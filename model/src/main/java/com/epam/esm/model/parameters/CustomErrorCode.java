@@ -11,7 +11,7 @@ public enum CustomErrorCode {
     ILLEGAL_REQUEST_PARAMETER("40001"),
     ILLEGAL_SORT_PARAMETER("40002"),
     ERROR_VALIDATION("40003"),
-    ERROR_SQL("40004"),
+    ERROR_SQL("50001"),
     ERROR_JSON("40005");
     private String statusCode;
 

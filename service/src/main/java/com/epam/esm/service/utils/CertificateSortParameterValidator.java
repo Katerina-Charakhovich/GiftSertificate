@@ -13,15 +13,15 @@ public class CertificateSortParameterValidator {
 
     public static boolean isValidParams(Map<String, String> groupParameters) {
         Map<String, String> groupSortParameters = groupParameters.entrySet().stream().
-                filter(s -> s.getKey().toUpperCase().equals(PARAMETER_SORT.toUpperCase())).
+                filter(s -> s.getKey().equalsIgnoreCase(PARAMETER_SORT)).
                 collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return groupSortParameters.entrySet().stream().anyMatch(s -> isValidParameterValue(s.getValue()));
     }
 
     public static boolean isValidParameterValue(String value) {
-        String tempValue = (value.charAt(0) == MINUS && value.length()>1)?value.substring(1):value;
+        String realValue = (value.charAt(0) == MINUS && value.length()>1)?value.substring(1):value;
         Optional<CertificateSortType> sortType=Arrays.stream(CertificateSortType.values())
-                .filter(s -> s.getType().getName().toUpperCase().equals(tempValue.toUpperCase()))
+                .filter(s -> s.getType().getName().equals(realValue))
                         .findFirst();
         return sortType.isPresent();
     }
