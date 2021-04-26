@@ -1,7 +1,7 @@
 INSERT INTO tag (id_tag, name_tag) VALUES
-(1, 'sport'),
-(2, 'spa'),
-(3, 'relax');
+(1, 'test_sport'),
+(2, 'test_spa'),
+(3, 'test_relax');
 
 INSERT INTO certificate (certificate_id, certificate_name,
 description, price, duration, create_date, last_update_date) VALUES

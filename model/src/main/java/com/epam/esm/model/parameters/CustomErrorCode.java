@@ -6,8 +6,12 @@ import java.util.Optional;
 public enum CustomErrorCode {
     RECOURSE_TAG_EXIST("40901"),
     RECOURSE_CERTIFICATE_EXIST("40902"),
+    RECOURSE_USER_EXIST("40903"),
+    RECOURSE_PURCHASE_EXIST("40904"),
     RECOURSE_TAG_NOT_EXIST("40401"),
     RECOURSE_CERTIFICATE_NOT_EXIST("40402"),
+    RECOURSE_PURCHASE_NOT_EXIST("40904"),
+    RECOURSE_USER_NOT_EXIST("40403"),
     ILLEGAL_REQUEST_PARAMETER("40001"),
     ILLEGAL_SORT_PARAMETER("40002"),
     ERROR_VALIDATION("40003"),
@@ -25,6 +29,6 @@ public enum CustomErrorCode {
     public static Optional<CertificateSortType> getByType(String type) {
         return Arrays
                 .stream(CertificateSortType.values())
-                .filter(s -> s.getType().getName().equalsIgnoreCase(type)).findFirst();
+                .filter(s -> s.getType().getParamName().equalsIgnoreCase(type)).findFirst();
     }
 }

@@ -7,15 +7,11 @@ public class IllegalRequestParameterException extends Exception {
 
     public IllegalRequestParameterException(CustomErrorCode customErrorCode, String message) {
         super(message);
+        this.customErrorCode=customErrorCode;
     }
 
     public IllegalRequestParameterException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public IllegalRequestParameterException(String message, CustomErrorCode customErrorCode) {
-        super(message);
-        this.customErrorCode = customErrorCode;
     }
 
     public CustomErrorCode getCustomErrorCode() {

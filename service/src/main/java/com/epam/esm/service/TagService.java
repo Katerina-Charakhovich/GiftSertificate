@@ -1,7 +1,9 @@
 package com.epam.esm.service;
 
-import com.epam.esm.model.entity.TagDto;
-import com.epam.esm.service.exeption.RecourseExistException;
+import com.epam.esm.model.dto.TagDto;
+
+import java.util.Optional;
 
 public interface TagService extends CommonService<TagDto> {
+   Optional<TagDto> findPopularTag();
 }

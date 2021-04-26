@@ -4,8 +4,9 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.model.entity.GiftCertificateDto;
+import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,15 +60,6 @@ class CertificateServiceImplTest {
     }
 
     @Test
-    void deleteByIdPositive() throws RecourseNotExistException {
-        long testId = giftCertificate.getId();
-        Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.of(giftCertificate));
-        Mockito.when(certificateDao.deleteLinkTagById(testId)).thenReturn(true);
-        Mockito.when(certificateDao.delete(testId)).thenReturn(true);
-        assertTrue(certificateService.delete(testId));
-    }
-
-    @Test
     void deleteByIdNegative() {
         long testId = giftCertificate.getId();
         Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.empty());
@@ -75,8 +67,17 @@ class CertificateServiceImplTest {
     }
 
     @Test
-    void addPositive() {
-        long testId = giftCertificate.getId();
-        Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.empty());
+    void addNegative() throws RecourseNotExistException, RecourseExistException {
+        GiftCertificateDto giftCertificateDto=new GiftCertificateDto();
+        giftCertificateDto.setName("testCertificate");
+        GiftCertificateDto findCertificateDto=new GiftCertificateDto();
+        findCertificateDto.setName("testCertificate");
+        findCertificateDto.setId(1);
+        Mockito.when(certificateDao.findByName(giftCertificateDto.getName())).thenReturn(Optional.of(findCertificateDto));
+        assertThrows(RecourseExistException.class,()->certificateService.add(giftCertificateDto));
+    }
+
+    @Test
+    void findEntityById() {
     }
 }

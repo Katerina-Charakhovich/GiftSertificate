@@ -1,6 +1,6 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.model.entity.TagDto;
+import com.epam.esm.model.dto.TagDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +20,10 @@ public interface TagDao extends BaseDao<TagDto>{
      * @return optional tag
      */
    Optional<TagDto> findByName(String tagName);
-
     /**
-     * Find list tags by certificate id
+     * Find most popular tag
      *
-     * @param certificateId Certificate id
-     * @return list
+     * @return optional tag
      */
-     List<TagDto> findListByCertificateId(long certificateId);
+    Optional<TagDto> findPopularTag();
 }

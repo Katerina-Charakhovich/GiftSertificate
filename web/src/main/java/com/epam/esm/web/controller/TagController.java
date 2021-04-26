@@ -1,11 +1,11 @@
 package com.epam.esm.web.controller;
 
-import com.epam.esm.model.entity.TagDto;
-import com.epam.esm.model.entity.ViewProfileJackson;
+import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.epam.esm.web.utils.HateoasWrapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
+import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -25,15 +28,20 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  * @version 1.0.0
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping(value = "/tags", produces = APPLICATION_JSON_VALUE)
 @Validated
 public class TagController {
-    private final TagService tagService;
-
+    private static final String DEFAULT_OFFSET = "0";
+    private static final String DEFAULT_LIMIT = "10";
+    private static final String INVALID_OFFSET_MESSAGE = "invalid value parameter offset";
+    private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
+    private static final String OFFSET = "offset";
+    private static final String LIMIT = "limit";
     @Autowired
-    public TagController(TagService tagService) {
-        this.tagService = tagService;
-    }
+    private final TagService tagService;
+    @Autowired
+    private final HateoasWrapper hateoasWrapper;
 
     /**
      * Find tag by id
@@ -43,10 +51,9 @@ public class TagController {
      * @throws RecourseNotExistException if tag isn't found
      */
     @GetMapping("/{id}")
-    @JsonView(ViewProfileJackson.GetRecourse.class)
     public ResponseEntity<TagDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         TagDto tagDto = tagService.findEntityById(id);
-        return new ResponseEntity<>(tagDto, HttpStatus.OK);
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperTagDto(tagDto), HttpStatus.OK);
     }
 
     /**
@@ -67,9 +74,31 @@ public class TagController {
      * @return the tag
      */
     @PostMapping
-    @JsonView(ViewProfileJackson.UpdateAndCreateRecourse.class)
     public ResponseEntity<TagDto> addTag(@Valid @RequestBody TagDto tagDto
-    ) throws RecourseExistException {
+    ) throws RecourseExistException, RecourseNotExistException {
         return new ResponseEntity<>(tagService.add(tagDto), HttpStatus.CREATED);
     }
-}
+
+    /**
+     * Find all tags
+     *
+     * @return list
+     */
+    @GetMapping
+    public ResponseEntity<List<TagDto>> findAll(
+            @Valid @RequestParam(required = false, value = OFFSET, defaultValue = DEFAULT_OFFSET)
+            @Min(value = 0, message = INVALID_OFFSET_MESSAGE) int offset,
+            @Valid @RequestParam(required = false, value = LIMIT, defaultValue = DEFAULT_LIMIT)
+            @Min(value = 1, message = INVALID_LIMIT_MESSAGE) int limit) {
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperListTagDto(tagService.findAll(offset, limit)), HttpStatus.OK);
+    }
+    /**
+     * Find most popular tag
+     *
+     * @return tag
+     */
+    @GetMapping(value = "/popular")
+    public ResponseEntity<TagDto> findPopularTag() {
+        Optional<TagDto> tagDtoOpt = tagService.findPopularTag();
+        return new ResponseEntity<>(tagDtoOpt.get(), HttpStatus.OK);
+    }}

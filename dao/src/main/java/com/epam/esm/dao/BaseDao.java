@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,10 +22,10 @@ public interface BaseDao<T> {
     /**
      * Deletes entity
      *
-     * @param id the entity id
-     * @return the boolean
+     * @param entity the entity
+     * @return void
      */
-    boolean delete(long id);
+    void delete(T entity);
 
     /**
      * Creates entity
@@ -32,7 +33,7 @@ public interface BaseDao<T> {
      * @param entity the entity
      * @return the int
      */
-     T create(T entity);
+    T create(T entity);
 
     /**
      * Updates entity
@@ -40,5 +41,14 @@ public interface BaseDao<T> {
      * @param entity the entity
      * @return the int
      */
-     T update(T entity);
+    T update(T entity);
+
+    /**
+     * Finds all entities limit size and page
+     *
+     * @param offset the number of page
+     * @param limit limit count of entities
+     * @return the int
+     */
+    List<T> findAll(int offset, int limit);
 }
