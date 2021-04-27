@@ -1,4 +1,5 @@
 package com.epam.esm.dao.converter;
+
 import com.epam.esm.dao.entity.Purchase;
 import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.dao.entity.User;
@@ -6,6 +7,7 @@ import com.epam.esm.model.dto.PurchaseDto;
 import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.dto.UseShortDto;
 import com.epam.esm.model.dto.UserDto;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,12 +18,13 @@ public class UserConverter {
         userDto.setName(entity.getUserName());
         userDto.setSurname(entity.getUserSurname());
         List<PurchaseDto> listPurchaseDto = null;
-      /*  if (entity.getListPurchase() != null) {
+        if (entity.getListPurchase() != null) {
             listPurchaseDto = PurchaseConverter.convertTo(entity.getListPurchase());
-        }*/
+        }
         userDto.setListPurchase(listPurchaseDto);
         return userDto;
     }
+
     public static UseShortDto convertShortTo(User entity) {
         UseShortDto userDto = new UseShortDto();
         userDto.setId(entity.getUserId());
@@ -29,6 +32,7 @@ public class UserConverter {
         userDto.setSurname(entity.getUserSurname());
         return userDto;
     }
+
     public static User convertShortFrom(UseShortDto entity) {
         User user = new User();
         if (entity.getId() != 0) {
@@ -53,6 +57,7 @@ public class UserConverter {
         user.setListPurchase(listPurchase);
         return user;
     }
+
     public static List<UserDto> convertTo(List<User> entities) {
         return entities.stream().map(UserConverter::convertTo).collect(Collectors.toList());
     }

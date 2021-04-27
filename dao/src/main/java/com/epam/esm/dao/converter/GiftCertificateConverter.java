@@ -4,11 +4,11 @@ import com.epam.esm.dao.entity.GiftCertificate;
 import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GiftCertificateConverter {
-
     public static GiftCertificateDto convertTo(GiftCertificate entity) {
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
         giftCertificateDto.setId(entity.getId());
@@ -44,6 +44,7 @@ public class GiftCertificateConverter {
         giftCertificate.setListTag(tags);
         return giftCertificate;
     }
+
     public static List<GiftCertificateDto> convertTo(List<GiftCertificate> entities) {
         return entities.stream().map(GiftCertificateConverter::convertTo).collect(Collectors.toList());
     }

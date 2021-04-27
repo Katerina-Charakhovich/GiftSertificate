@@ -77,25 +77,6 @@ public class PurchaseConverter {
         return order;
     }
 
-/*    public static Purchase convertFromCreateDto(PurchaseShortDto entity) {
-        Purchase purchase = new Purchase();
-        if (entity.getId() != 0) {
-            purchase.setOrderId(entity.getId());
-        }
-        User user = new User();
-        user.setUserId(entity.getId());
-        purchase.setUser(user);
-        List<GiftCertificate> listGiftCertificate = null;
-        for (GiftCertificateDto giftCertificateDto : entity.getListGiftCertificate()
-        ) {
-            GiftCertificate giftCertificate = new GiftCertificate();
-            giftCertificate.setId(giftCertificateDto.getId());
-            listGiftCertificate.add(giftCertificate);
-        }
-        purchase.setListGiftCertificate(listGiftCertificate);
-        return purchase;
-    }*/
-
     public static List<PurchaseDto> convertTo(List<Purchase> entities) {
         return entities.stream().map(PurchaseConverter::convertTo).collect(Collectors.toList());
     }
