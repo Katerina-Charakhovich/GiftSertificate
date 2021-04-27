@@ -2,7 +2,6 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dao.impl.UserDaoImpl;
-import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
