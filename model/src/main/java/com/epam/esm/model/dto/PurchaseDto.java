@@ -16,7 +16,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PurchaseDto extends Dto {
-    long id;
+    Long id;
     @NotBlank
     UserDto userDto;
     @Positive

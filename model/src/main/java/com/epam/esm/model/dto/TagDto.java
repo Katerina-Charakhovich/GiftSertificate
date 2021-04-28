@@ -18,8 +18,8 @@ import javax.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TagDto extends Dto {
-    private long tagId;
+    Long tagId;
     @NotBlank
     @Size(min = 2, max = 3, message = "Incorrect length ")
-    private String tagName;
+    String tagName;
 }

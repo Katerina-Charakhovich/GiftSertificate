@@ -51,7 +51,7 @@ class TagServiceImplTest {
 
     @Test
     void findPopularTag() {
-        TagDto tagDto = new TagDto(1, "popularTag");
+        TagDto tagDto = new TagDto(1L, "popularTag");
         Mockito.when(tagDao.findPopularTag()).thenReturn(Optional.of(tagDto));
         Optional<TagDto> actual = tagService.findPopularTag();
         Optional<TagDto> expected = Optional.of(tagDto);
@@ -64,10 +64,10 @@ class TagServiceImplTest {
         TagDto tagDto = new TagDto();
         tagDto.setTagName("createTag");
         Mockito.when(tagDao.findByName(tagDto.getTagName())).thenReturn(Optional.empty());
-        TagDto createTagDto = new TagDto(12, "createTag");
+        TagDto createTagDto = new TagDto(12L, "createTag");
         Mockito.when(tagDao.create(tagDto)).thenReturn(createTagDto);
         TagDto actual = tagService.add(tagDto);
-        TagDto expected = new TagDto(12, "createTag");
+        TagDto expected = new TagDto(12L, "createTag");
         assertEquals(expected, actual);
     }
 
@@ -81,8 +81,8 @@ class TagServiceImplTest {
 
     @Test
     void deleteNegative() {
-        long tagId = 1;
-        TagDto tagDto = new TagDto(1, "deleteTag");
+        Long tagId = 1L;
+        TagDto tagDto = new TagDto(1L, "deleteTag");
         Mockito.when(tagDao.findEntityById(tagId)).thenReturn(Optional.empty());
         assertThrows(RecourseNotExistException.class, () -> tagService.delete(tagId));
     }
@@ -92,10 +92,16 @@ class TagServiceImplTest {
         int offset = 0;
         int limit = 2;
         List<TagDto> tags = new ArrayList<>();
-        tags.add(new TagDto(1, "test1"));
-        tags.add(new TagDto(2, "test2"));
+        tags.add(new TagDto(1L, "test1"));
+        tags.add(new TagDto(2L, "test2"));
         Mockito.when(tagDao.findAll(offset, limit)).thenReturn(tags);
         List<TagDto> actual = tagService.findAll(offset, limit);
         assertEquals(tags, actual);
+    }
+
+    @Test
+    void update() {
+        TagDto tagDto = new TagDto(1L, "updateTag");
+        assertThrows(UnsupportedOperationException.class, () -> tagService.update(tagDto));
     }
 }

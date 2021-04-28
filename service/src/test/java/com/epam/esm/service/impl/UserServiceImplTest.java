@@ -55,4 +55,22 @@ class UserServiceImplTest {
         List<UserDto> actual = userService.findAll(offset,limit);
         assertEquals(expected, actual);
     }
+
+    @Test
+    void add() {
+        UserDto userDto = new UserDto(1L,"userName","userSurName",null);
+        assertThrows(UnsupportedOperationException.class, () -> userService.add(userDto));
+    }
+
+    @Test
+    void update() {
+        UserDto userDto = new UserDto(1L,"userName","userSurName",null);
+        assertThrows(UnsupportedOperationException.class, () -> userService.update(userDto));
+    }
+
+    @Test
+    void delete() {
+        long id = 1L;
+        assertThrows(UnsupportedOperationException.class, () -> userService.delete( id));
+    }
 }

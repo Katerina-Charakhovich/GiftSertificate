@@ -17,7 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto extends Dto {
-    long id;
+    Long id;
     @NotBlank
     @Pattern(regexp = "[a-zA-Zа-яА-ЯёЁ]{50}")
     @Size(min = 3, max = 45)

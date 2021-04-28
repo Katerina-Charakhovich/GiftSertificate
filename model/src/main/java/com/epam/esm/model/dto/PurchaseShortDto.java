@@ -16,9 +16,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PurchaseShortDto extends Dto {
     @Positive
-    long id;
+    Long id;
     @Positive
-    long userId;
+    Long userId;
     @Positive
     @Digits(integer = 5, fraction = 2)
     private BigDecimal price;

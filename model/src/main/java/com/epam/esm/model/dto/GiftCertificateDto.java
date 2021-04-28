@@ -21,7 +21,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GiftCertificateDto extends Dto {
-    private long id;
+    private Long id;
     @NotBlank
     @Pattern(regexp = "[a-zA-Zа-яА-ЯёЁ0-9\\s?!,.:'\\-]{3,45}")
     @Size(min = 3, max = 45)
