@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum CertificateParameter {
-    TAG_NAME("tagName", TableName.TAG_TABLE),
-    CERTIFICATE_NAME("name", TableName.CERTIFICATE_TABLE),
-    CERTIFICATE_DESCRIPTION("description", TableName.CERTIFICATE_TABLE),
-    CREATE_DATE("createDate", TableName.CERTIFICATE_TABLE);
+    TAG_NAME("tagName", TableName.TABLE_TAG),
+    CERTIFICATE_NAME("name", TableName.TABLE_CERTIFICATE),
+    CERTIFICATE_DESCRIPTION("description", TableName.TABLE_CERTIFICATE),
+    CREATE_DATE("createDate", TableName.TABLE_CERTIFICATE);
     String paramName;
     String entityName;
 

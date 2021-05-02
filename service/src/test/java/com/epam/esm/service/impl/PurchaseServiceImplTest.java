@@ -31,7 +31,7 @@ class PurchaseServiceImplTest {
     @Mock
     GiftCertificateDao giftCertificateDao;
 
-    @BeforeEach
+   @BeforeEach
     public void setUp() {
         purchaseDao = Mockito.mock(PurchaseDaoImpl.class);
         userDao = Mockito.mock(UserDaoImpl.class);
@@ -43,7 +43,8 @@ class PurchaseServiceImplTest {
     @Test
     void add() throws RecourseNotExistException {
         long testId = 1L;
-        UserDto userDto = new UserDto(1L, "test", "test", null);
+        UseShortDto userShortDto = new UseShortDto(1L, "test", "test");
+        UserDto userDto = new UserDto(1L, "test", "test",null);
         TagDto tagDto = new TagDto(1L, "testTag");
         List<TagDto> tagDtoList = new ArrayList<>();
         tagDtoList.add(tagDto);
@@ -55,12 +56,12 @@ class PurchaseServiceImplTest {
         giftCertificateListId.add(1L);
         PurchaseShortDto purchaseShortDto = new PurchaseShortDto(1L, 1L, BigDecimal.valueOf(10, 12),
                 giftCertificateListId);
-        PurchaseDto purchaseDto = new PurchaseDto(1L, userDto,
+        PurchaseDto purchaseDto = new PurchaseDto(1L, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, giftCertificateDtoList);
         Mockito.when(userDao.findEntityById(testId)).thenReturn(Optional.of(userDto));
         Mockito.when(giftCertificateDao.findEntityById(testId)).thenReturn(Optional.of(giftCertificateDto));
 
-        PurchaseDto expected = new PurchaseDto(1L, userDto,
+        PurchaseDto expected = new PurchaseDto(1L, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, giftCertificateDtoList);
 
         Mockito.when(purchaseDao.addPurchaseDto(purchaseShortDto)).thenReturn(purchaseShortDto);
@@ -71,10 +72,11 @@ class PurchaseServiceImplTest {
     @Test
     void findEntityById() throws RecourseNotExistException {
         long testId = 1L;
+        UseShortDto userShortDto = new UseShortDto(1L, "test", "test");
         UserDto userDto = new UserDto(1L, "test", "test", null);
-        PurchaseDto purchaseDto = new PurchaseDto(testId, userDto,
+        PurchaseDto purchaseDto = new PurchaseDto(testId, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, null);
-        PurchaseDto expected = new PurchaseDto(testId, userDto,
+        PurchaseDto expected = new PurchaseDto(testId, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, null);
         Mockito.when(userDao.findEntityById(testId)).thenReturn(Optional.of(userDto));
         Mockito.when(purchaseDao.findEntityById(testId)).thenReturn(Optional.of(purchaseDto));
@@ -85,8 +87,8 @@ class PurchaseServiceImplTest {
     void findAll() {
         int offset = 0;
         int limit = 2;
-        UserDto userDto = new UserDto(1L, "test", "test", null);
-        PurchaseDto purchaseDto = new PurchaseDto(1L, userDto,
+        UseShortDto userShortDto = new UseShortDto(1L, "test", "test");
+        PurchaseDto purchaseDto = new PurchaseDto(1L, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, null);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
         purchaseDtoList.add(purchaseDto);
@@ -99,8 +101,9 @@ class PurchaseServiceImplTest {
     @Test
     void findListPurchaseByUserId() throws RecourseNotExistException {
         long testId = 1L;
+        UseShortDto userShortDto = new UseShortDto(1L, "test", "test");
         UserDto userDto = new UserDto(1L, "test", "test", null);
-        PurchaseDto purchaseDto = new PurchaseDto(testId, userDto,
+        PurchaseDto purchaseDto = new PurchaseDto(testId, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, null);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
         purchaseDtoList.add(purchaseDto);
@@ -114,8 +117,8 @@ class PurchaseServiceImplTest {
     @Test
     void testAdd() {
         long testId = 1L;
-        UserDto userDto = new UserDto(1L, "test", "test", null);
-        PurchaseDto purchaseDto = new PurchaseDto(testId, userDto,
+        UseShortDto userShortDto = new UseShortDto(1L, "test", "test");
+        PurchaseDto purchaseDto = new PurchaseDto(testId, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, null);
         assertThrows(UnsupportedOperationException.class, () -> purchaseService.add(purchaseDto));
     }
@@ -123,8 +126,8 @@ class PurchaseServiceImplTest {
     @Test
     void update() {
         long testId = 1L;
-        UserDto userDto = new UserDto(1L, "test", "test", null);
-        PurchaseDto purchaseDto = new PurchaseDto(testId, userDto,
+        UseShortDto userShortDto = new UseShortDto(1L, "test", "test");
+        PurchaseDto purchaseDto = new PurchaseDto(testId, userShortDto,
                 BigDecimal.valueOf(10, 12), null, null, null);
         assertThrows(UnsupportedOperationException.class, () -> purchaseService.update(purchaseDto));
     }

@@ -2,7 +2,10 @@ package com.epam.esm.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
@@ -26,5 +29,5 @@ public class UserDto extends Dto {
     @Size(min = 1, max = 1000)
     @Pattern(regexp = "^[a-zA-Zа-яА-ЯёЁ]{50}")
     String surname;
-    List<PurchaseDto> listPurchase;
+    List<PurchaseShortDto> listPurchase;
 }

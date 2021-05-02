@@ -1,6 +1,9 @@
 package com.epam.esm.dao.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -18,7 +21,7 @@ public class GiftCertificate extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "certificate_id")
-    private long id;
+    private Long id;
     @Column(name = "certificate_name")
     private String name;
     @Column(name = "description")

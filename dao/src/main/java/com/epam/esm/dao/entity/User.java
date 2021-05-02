@@ -1,8 +1,10 @@
 package com.epam.esm.dao.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class User extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    long userId;
+    Long userId;
     @Column(name = "user_name")
     String userName;
     @Column(name = "user_surname")

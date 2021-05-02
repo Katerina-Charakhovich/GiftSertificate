@@ -17,7 +17,7 @@ public class TagConverter {
     public static Tag convertFrom(TagDto entity) {
         Tag tag = new Tag();
         tag.setTagName(entity.getTagName());
-        if (entity.getTagId() != 0) {
+        if (entity.getTagId() != null) {
             tag.setTagId(entity.getTagId());
         }
         return tag;

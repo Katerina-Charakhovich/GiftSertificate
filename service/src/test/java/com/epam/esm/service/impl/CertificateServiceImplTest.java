@@ -5,7 +5,6 @@ import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.model.dto.*;
-import com.epam.esm.model.parameters.CustomErrorCode;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
@@ -69,7 +68,7 @@ class CertificateServiceImplTest {
     }
 
     @Test
-    void addNegative() throws RecourseNotExistException, RecourseExistException {
+    void addNegative() {
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
         giftCertificateDto.setName("testCertificate");
         GiftCertificateDto findCertificateDto = new GiftCertificateDto();

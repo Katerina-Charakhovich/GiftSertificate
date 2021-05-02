@@ -10,7 +10,6 @@ import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.model.parameters.CustomErrorCode;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +20,18 @@ import java.util.Optional;
 
 import static com.epam.esm.model.parameters.CustomErrorCode.RECOURSE_PURCHASE_NOT_EXIST;
 
-@AllArgsConstructor
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
-    @Autowired
     private final UserDao userDao;
-    @Autowired
     private final PurchaseDao purchaseDao;
-    @Autowired
     private final GiftCertificateDao giftCertificateDao;
+
+    @Autowired
+    public PurchaseServiceImpl(UserDao userDao, PurchaseDao purchaseDao, GiftCertificateDao giftCertificateDao) {
+        this.userDao = userDao;
+        this.purchaseDao = purchaseDao;
+        this.giftCertificateDao = giftCertificateDao;
+    }
 
     @Override
     public PurchaseDto add(PurchaseDto purchaseDto) throws RecourseNotExistException {
@@ -50,7 +52,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Executable delete(long id) throws RecourseNotExistException {
+    public void delete(long id) throws RecourseNotExistException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

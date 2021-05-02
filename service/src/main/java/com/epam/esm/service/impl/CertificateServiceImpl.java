@@ -12,7 +12,6 @@ import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import com.epam.esm.service.utils.CertificateParameterApiValidator;
 import com.epam.esm.service.utils.CertificateSortParameterValidator;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +24,15 @@ import java.util.Optional;
 import static com.epam.esm.model.parameters.CustomErrorCode.*;
 
 @Service
-@AllArgsConstructor
 public class CertificateServiceImpl implements CertificateService {
-    @Autowired
     private final GiftCertificateDao certificateDao;
-    @Autowired
     private final TagDao tagDao;
+
+    @Autowired
+    public CertificateServiceImpl(GiftCertificateDao certificateDao, TagDao tagDao) {
+        this.certificateDao = certificateDao;
+        this.tagDao = tagDao;
+    }
 
     @Override
     @Transactional
@@ -67,12 +69,11 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     @Transactional
-    public Executable delete(long id) throws RecourseNotExistException {
+    public void delete(long id) throws RecourseNotExistException {
         Optional<GiftCertificateDto> optionalGiftCertificate = certificateDao.findEntityById(id);
         if (!optionalGiftCertificate.isPresent())
             throw new RecourseNotExistException(RECOURSE_TAG_NOT_EXIST, "Tag with id={" + id + " d} doesn't exist");
         certificateDao.delete(optionalGiftCertificate.get());
-        return null;
     }
 
     @Override
@@ -85,7 +86,7 @@ public class CertificateServiceImpl implements CertificateService {
                                                                     int offset,
                                                                     int limit)
             throws IllegalRequestParameterException, IllegalRequestSortParameterException {
-       if (!CertificateParameterApiValidator.isValidParams(groupParameters)) {
+        if (!CertificateParameterApiValidator.isValidParams(groupParameters)) {
             throw new IllegalRequestParameterException(ILLEGAL_REQUEST_PARAMETER, "The request parameters are illegal");
         }
         if (!CertificateSortParameterValidator.isValidParams(groupParameters)) {

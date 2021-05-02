@@ -5,7 +5,6 @@ import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import com.epam.esm.web.utils.HateoasWrapper;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  * @version 1.0.0
  */
 @RestController
-@AllArgsConstructor
 @RequestMapping(value = "/users", produces = APPLICATION_JSON_VALUE)
 @Validated
 public class UserController {
@@ -37,12 +35,16 @@ public class UserController {
     private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
     private static final String OFFSET = "offset";
     private static final String LIMIT = "limit";
+    private final UserService userService;
+    private final PurchaseService purchaseService;
+    private final HateoasWrapper hateoasWrapper;
+
     @Autowired
-    UserService userService;
-    @Autowired
-    PurchaseService purchaseService;
-    @Autowired
-    HateoasWrapper hateoasWrapper;
+    public UserController(UserService userService, PurchaseService purchaseService, HateoasWrapper hateoasWrapper) {
+        this.userService = userService;
+        this.purchaseService = purchaseService;
+        this.hateoasWrapper = hateoasWrapper;
+    }
 
     /**
      * Find user by id

@@ -10,7 +10,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
@@ -34,34 +39,33 @@ class TagDaoImplTest {
         assertNotNull(tagDtoList);
     }
 
-   /* @Test
+    @Test
     @Transactional
     void delete() {
         TagDto tagDto = new TagDto();
         tagDto.setTagName("testDelete");
-        Long tagId=tagDaoImpl.create(tagDto).getTagId();
-        tagDto.setTagId( tagId);
+        Long tagId = tagDaoImpl.create(tagDto).getTagId();
+        tagDto.setTagId(tagId);
         tagDaoImpl.delete(tagDto);
         assertEquals(Optional.empty(), tagDaoImpl.findEntityById(tagId));
-    }*/
+    }
 
-
-  /*  @Test
+    @Test
     @Transactional
     void create() {
         TagDto tagDto = new TagDto();
         tagDto.setTagName("test");
         tagDto.setTagId(tagDaoImpl.create(tagDto).getTagId());
         assertEquals(tagDto, tagDaoImpl.findEntityById(tagDto.getTagId()).get());
-    }*/
+    }
 
- /*   @Test
+    @Test
     @Transactional
     void findByName() {
         TagDto tagDto = new TagDto();
         tagDto.setTagName("test");
         tagDto.setTagId(tagDaoImpl.create(tagDto).getTagId());
-        Optional<TagDto> tagDto1=tagDaoImpl.findByName("relax");
+        Optional<TagDto> tagDto1 = tagDaoImpl.findByName("relax");
         assertEquals(tagDto.getTagName(), tagDaoImpl.findEntityById(tagDto.getTagId()).get().getTagName());
-    }*/
+    }
 }

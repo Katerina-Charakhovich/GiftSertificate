@@ -7,7 +7,6 @@ import com.epam.esm.service.exeption.IllegalRequestSortParameterException;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import com.epam.esm.web.utils.HateoasWrapper;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,6 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/certificates", produces = APPLICATION_JSON_VALUE)
 @Validated
-@AllArgsConstructor
 public class GiftCertificateController {
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "10";
@@ -40,10 +38,14 @@ public class GiftCertificateController {
     private static final String OFFSET = "offset";
     private static final String LIMIT = "limit";
     private static final String COMMA = ",";
-    @Autowired
     private final CertificateService certificateService;
-    @Autowired
     private final HateoasWrapper hateoasWrapper;
+
+    @Autowired
+    public GiftCertificateController(CertificateService certificateService, HateoasWrapper hateoasWrapper) {
+        this.certificateService = certificateService;
+        this.hateoasWrapper = hateoasWrapper;
+    }
 
     /**
      * Find by id gift certificate.
@@ -109,10 +111,10 @@ public class GiftCertificateController {
         if (allRequestParam.containsKey(OFFSET)) {
             allRequestParam.remove(OFFSET);
         }
-        Map<String,List<String>> params=new HashMap<>();
-        for (Map.Entry<String,String> entry:allRequestParam.entrySet()
-             ){
-            params.put( entry.getKey(),Arrays.asList(entry.getValue().split(COMMA)));
+        Map<String, List<String>> params = new HashMap<>();
+        for (Map.Entry<String, String> entry : allRequestParam.entrySet()
+        ) {
+            params.put(entry.getKey(), Arrays.asList(entry.getValue().split(COMMA)));
         }
         return new ResponseEntity<>(hateoasWrapper.hateoasWrapperListGiftCertificateDto(
                 certificateService.findGiftCertificateListByParams(params, offset, limit)), HttpStatus.FOUND);

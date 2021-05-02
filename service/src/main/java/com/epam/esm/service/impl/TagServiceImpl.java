@@ -38,12 +38,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Executable delete(long id) throws RecourseNotExistException {
+    public void delete(long id) throws RecourseNotExistException {
         Optional<TagDto> optionalTag = tagDao.findEntityById(id);
         if (!optionalTag.isPresent())
             throw new RecourseNotExistException(CustomErrorCode.RECOURSE_TAG_NOT_EXIST, "Tag with id={" + id + "} doesn't exist");
         tagDao.delete(optionalTag.get());
-        return null;
     }
 
     @Override

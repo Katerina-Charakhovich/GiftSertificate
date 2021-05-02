@@ -1,9 +1,6 @@
 package com.epam.esm.web.utils;
 
-import com.epam.esm.model.dto.GiftCertificateDto;
-import com.epam.esm.model.dto.PurchaseDto;
-import com.epam.esm.model.dto.TagDto;
-import com.epam.esm.model.dto.UserDto;
+import com.epam.esm.model.dto.*;
 import com.epam.esm.web.controller.GiftCertificateController;
 import com.epam.esm.web.controller.PurchaseController;
 import com.epam.esm.web.controller.TagController;
@@ -22,6 +19,12 @@ public class HateoasWrapper {
     private final String TAGS = "tags";
 
     public UserDto hateoasWrapperUserDto(UserDto userDto) {
+        userDto.add(linkTo(UserController.class).
+                slash(userDto.getId()).withSelfRel());
+        userDto.add(linkTo(UserController.class).slash(userDto.getId()).slash(PURCHASES).withRel(PURCHASES));
+        return userDto;
+    }
+    public UseShortDto hateoasWrapperUserShortDto(UseShortDto userDto) {
         userDto.add(linkTo(UserController.class).
                 slash(userDto.getId()).withSelfRel());
         userDto.add(linkTo(UserController.class).slash(userDto.getId()).slash(PURCHASES).withRel(PURCHASES));
@@ -55,7 +58,7 @@ public class HateoasWrapper {
     public PurchaseDto hateoasWrapperPurchaseDto(PurchaseDto purchaseDto) {
         purchaseDto.add(linkTo(PurchaseController.class).
                 slash(purchaseDto.getId()).withSelfRel());
-        purchaseDto.setUserDto(hateoasWrapperUserDto(purchaseDto.getUserDto()));
+        purchaseDto.setUserShortDto(hateoasWrapperUserShortDto(purchaseDto.getUserShortDto()));
         for (GiftCertificateDto giftCertificateDto : purchaseDto.getListGiftCertificateDto()
         ) {
             hateoasWrapperGiftCertificateDto(giftCertificateDto);

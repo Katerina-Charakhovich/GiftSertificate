@@ -15,7 +15,7 @@ public class PurchaseConverter {
     public static PurchaseDto convertTo(Purchase entity) {
         PurchaseDto purchaseDto = new PurchaseDto();
         purchaseDto.setId(entity.getPurchaseId());
-        purchaseDto.setUserDto(UserConverter.convertTo(entity.getUser()));
+        purchaseDto.setUserShortDto(UserConverter.convertShortTo(entity.getUser()));
         purchaseDto.setPrice(entity.getPrice());
         purchaseDto.setCreateDate(entity.getCreateDate());
         purchaseDto.setLastUpdateDate(entity.getLastUpdateTime());
@@ -39,7 +39,7 @@ public class PurchaseConverter {
 
     public static Purchase convertShortFrom(PurchaseShortDto entity) {
         Purchase purchase = new Purchase();
-        if (entity.getId() != 0) {
+        if (entity.getId() != null) {
             purchase.setPurchaseId(entity.getId());
         }
         User user = new User();
@@ -59,12 +59,12 @@ public class PurchaseConverter {
 
     public static Purchase convertFrom(PurchaseDto entity) {
         Purchase order = new Purchase();
-        if (entity.getId() != 0) {
+        if (entity.getId() != null) {
             order.setPurchaseId(entity.getId());
         }
-        order.setUser(UserConverter.convertFrom(entity.getUserDto()));
+        order.setUser(UserConverter.convertShortFrom(entity.getUserShortDto()));
         User user = new User();
-        user.setUserId(entity.getUserDto().getId());
+        user.setUserId(entity.getUserShortDto().getId());
         order.setUser(user);
         order.setPrice(entity.getPrice());
         order.setCreateDate(entity.getCreateDate());
@@ -83,5 +83,12 @@ public class PurchaseConverter {
 
     public static List<Purchase> convertFrom(List<PurchaseDto> entities) {
         return entities.stream().map(PurchaseConverter::convertFrom).collect(Collectors.toList());
+    }
+    public static List<PurchaseShortDto> convertShortTo(List<Purchase> entities) {
+        return entities.stream().map(PurchaseConverter::convertShortTo).collect(Collectors.toList());
+    }
+
+    public static List<Purchase> convertShortFrom(List<PurchaseShortDto> entities) {
+        return entities.stream().map(PurchaseConverter::convertShortFrom).collect(Collectors.toList());
     }
 }

@@ -28,7 +28,7 @@ public class GiftCertificateConverter {
 
     public static GiftCertificate convertFrom(GiftCertificateDto entity) {
         GiftCertificate giftCertificate = new GiftCertificate();
-        if (entity.getId() != 0) {
+        if (entity.getId() != null) {
             giftCertificate.setId(entity.getId());
         }
         giftCertificate.setName(entity.getName());

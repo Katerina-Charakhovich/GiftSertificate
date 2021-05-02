@@ -3,10 +3,7 @@ package com.epam.esm.dao.converter;
 import com.epam.esm.dao.entity.Purchase;
 import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.dao.entity.User;
-import com.epam.esm.model.dto.PurchaseDto;
-import com.epam.esm.model.dto.TagDto;
-import com.epam.esm.model.dto.UseShortDto;
-import com.epam.esm.model.dto.UserDto;
+import com.epam.esm.model.dto.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,9 +14,9 @@ public class UserConverter {
         userDto.setId(entity.getUserId());
         userDto.setName(entity.getUserName());
         userDto.setSurname(entity.getUserSurname());
-        List<PurchaseDto> listPurchaseDto = null;
+        List<PurchaseShortDto> listPurchaseDto = null;
         if (entity.getListPurchase() != null) {
-            listPurchaseDto = PurchaseConverter.convertTo(entity.getListPurchase());
+            listPurchaseDto = PurchaseConverter.convertShortTo(entity.getListPurchase());
         }
         userDto.setListPurchase(listPurchaseDto);
         return userDto;
@@ -35,7 +32,7 @@ public class UserConverter {
 
     public static User convertShortFrom(UseShortDto entity) {
         User user = new User();
-        if (entity.getId() != 0) {
+        if (entity.getId() != null) {
             user.setUserId(entity.getId());
         }
         user.setUserName(entity.getName());
@@ -45,14 +42,14 @@ public class UserConverter {
 
     public static User convertFrom(UserDto entity) {
         User user = new User();
-        if (entity.getId() != 0) {
+        if (entity.getId() != null) {
             user.setUserId(entity.getId());
         }
         user.setUserName(entity.getName());
         user.setUserSurname(entity.getSurname());
         List<Purchase> listPurchase = null;
         if (entity.getListPurchase() != null) {
-            listPurchase = PurchaseConverter.convertFrom(entity.getListPurchase());
+            listPurchase = PurchaseConverter.convertShortFrom(entity.getListPurchase());
         }
         user.setListPurchase(listPurchase);
         return user;

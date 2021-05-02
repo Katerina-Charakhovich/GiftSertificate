@@ -2,7 +2,10 @@ package com.epam.esm.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.*;
@@ -18,7 +21,7 @@ import java.util.List;
 public class PurchaseDto extends Dto {
     Long id;
     @NotBlank
-    UserDto userDto;
+    UseShortDto userShortDto;
     @Positive
     @Digits(integer = 5, fraction = 2)
     private BigDecimal price;

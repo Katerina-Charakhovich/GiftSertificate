@@ -28,7 +28,6 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  * @version 1.0.0
  */
 @RestController
-@AllArgsConstructor
 @RequestMapping(value = "/tags", produces = APPLICATION_JSON_VALUE)
 @Validated
 public class TagController {
@@ -38,10 +37,14 @@ public class TagController {
     private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
     private static final String OFFSET = "offset";
     private static final String LIMIT = "limit";
-    @Autowired
     private final TagService tagService;
-    @Autowired
     private final HateoasWrapper hateoasWrapper;
+
+    @Autowired
+    public TagController(TagService tagService, HateoasWrapper hateoasWrapper) {
+        this.tagService = tagService;
+        this.hateoasWrapper = hateoasWrapper;
+    }
 
     /**
      * Find tag by id
@@ -92,6 +95,7 @@ public class TagController {
             @Min(value = 1, message = INVALID_LIMIT_MESSAGE) int limit) {
         return new ResponseEntity<>(hateoasWrapper.hateoasWrapperListTagDto(tagService.findAll(offset, limit)), HttpStatus.OK);
     }
+
     /**
      * Find most popular tag
      *
@@ -101,4 +105,5 @@ public class TagController {
     public ResponseEntity<TagDto> findPopularTag() {
         Optional<TagDto> tagDtoOpt = tagService.findPopularTag();
         return new ResponseEntity<>(tagDtoOpt.get(), HttpStatus.OK);
-    }}
+    }
+}

@@ -18,7 +18,7 @@ public class Purchase extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "purchase_id")
-    long purchaseId;
+    Long purchaseId;
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
