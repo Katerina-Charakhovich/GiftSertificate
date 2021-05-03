@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.*;
@@ -33,6 +34,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class GiftCertificateController {
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "10";
+    private static final int MAX_LIMIT = 30;
+    private static final int MIN_LIMIT = 1;
     private static final String INVALID_OFFSET_MESSAGE = "invalid value parameter offset";
     private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
     private static final String OFFSET = "offset";
@@ -85,7 +88,7 @@ public class GiftCertificateController {
             @Valid @RequestBody GiftCertificateDto giftCertificate)
             throws RecourseExistException, RecourseNotExistException {
         GiftCertificateDto createCertificate = certificateService.add(giftCertificate);
-        return new ResponseEntity<>(createCertificate, HttpStatus.CREATED);
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperGiftCertificateDto(createCertificate), HttpStatus.CREATED);
     }
 
     /**
@@ -101,7 +104,8 @@ public class GiftCertificateController {
             @Valid @RequestParam(required = false, value = OFFSET, defaultValue = DEFAULT_OFFSET)
             @Min(value = 0, message = INVALID_OFFSET_MESSAGE) int offset,
             @Valid @RequestParam(required = false, value = LIMIT, defaultValue = DEFAULT_LIMIT)
-            @Min(value = 1, message = INVALID_LIMIT_MESSAGE) int limit,
+            @Min(value = MIN_LIMIT, message = INVALID_LIMIT_MESSAGE)
+            @Max(value = MAX_LIMIT, message = INVALID_LIMIT_MESSAGE) int limit,
             @RequestParam Map<String, String> allRequestParam)
             throws IllegalRequestSortParameterException,
             IllegalRequestParameterException {
@@ -133,6 +137,6 @@ public class GiftCertificateController {
             @PathVariable @Positive long id,
             @RequestBody GiftCertificateDto giftCertificate) throws RecourseNotExistException {
         giftCertificate.setId(id);
-        return new ResponseEntity<>(certificateService.update(giftCertificate), HttpStatus.OK);
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperGiftCertificateDto(certificateService.update(giftCertificate)), HttpStatus.OK);
     }
 }

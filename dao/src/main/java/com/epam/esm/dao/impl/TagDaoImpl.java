@@ -23,12 +23,15 @@ public class TagDaoImpl implements TagDao {
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger(TagDaoImpl.class);
     public static final String SELECT_ALL_TAG = "FROM Tag";
     private static final String FIND_TAG_BY_NAME = "FROM Tag WHERE tagName=:tagName";
-    private static final String SELECT_TOP_TAG = "select tag.id_tag,tag.name_tag,g.cnt from tag, " +
-            "(select t2.id_tag as tag_id,t2.name_tag as name_tag, count(*) as cnt,sum(t.price) from certificate t " +
-            " join certificate_tag t1 on t.certificate_id=t1.certificate_id " +
-            " join tag t2 on t1.id_tag = t2.id_tag group by t2.id_tag " +
-            "order by 3 desc,4 desc LIMIT 1 ) g " +
-            "where tag.id_tag=g.tag_id";
+    private static final String SELECT_TOP_TAG = "select tag.id_tag,tag.name_tag,g.cnt from tag, (select t2.id_tag as tag_id,t2.name_tag as name_tag, count(*) as cnt,sum(t.price)  " +
+            "from purchase p " +
+            "         join  purchase_certificate p1 on p.purchase_id=p1.purchase_id " +
+            "         join certificate t on  p1.certificate_id=t.certificate_id " +
+            "         join certificate_tag t1 on t.certificate_id=t1.certificate_id " +
+            "         join tag t2 on t1.id_tag = t2.id_tag " +
+            "group by t2.id_tag " +
+            "order by 3 desc,4 desc LIMIT 1 ) g  " +
+            "where tag.id_tag=g.tag_id;";
 
     @Override
     public Optional<TagDto> findEntityById(long id) {

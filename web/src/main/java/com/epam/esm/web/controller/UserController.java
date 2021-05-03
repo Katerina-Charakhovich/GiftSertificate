@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -31,6 +32,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class UserController {
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "10";
+    private static final int MAX_LIMIT = 30;
+    private static final int MIN_LIMIT = 1;
     private static final String INVALID_OFFSET_MESSAGE = "invalid value parameter offset";
     private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
     private static final String OFFSET = "offset";
@@ -69,7 +72,8 @@ public class UserController {
             @Valid @RequestParam(required = false, value = OFFSET, defaultValue = DEFAULT_OFFSET)
             @Min(value = 0, message = INVALID_OFFSET_MESSAGE) int offset,
             @Valid @RequestParam(required = false, value = LIMIT, defaultValue = DEFAULT_LIMIT)
-            @Min(value = 1, message = INVALID_LIMIT_MESSAGE) int limit) {
+            @Min(value = MIN_LIMIT, message = INVALID_LIMIT_MESSAGE)
+            @Max(value = MAX_LIMIT, message = INVALID_LIMIT_MESSAGE) int limit) {
         List<UserDto> list = userService.findAll(offset, limit);
         return new ResponseEntity<>(hateoasWrapper.hateoasWrapperListUserDto(list), HttpStatus.OK);
     }
