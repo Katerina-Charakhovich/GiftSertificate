@@ -1,72 +1,57 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.dao.converter.impl.TagConverter;
+import com.epam.esm.dao.converter.TagConverter;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.entity.Tag;
-import com.epam.esm.dao.mapper.TagMapper;
-import com.epam.esm.model.entity.TagDto;
+import com.epam.esm.model.dto.TagDto;
+import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@AllArgsConstructor
 public class TagDaoImpl implements TagDao {
-    private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger(TagDaoImpl.class);
-    private final JdbcTemplate jdbcTemplate;
-    private final TagMapper tagMapper;
-    private final TagConverter tagConverter;
-    private static final String FIND_TAG_BY_ID = "SELECT tag.id_tag, tag.name_tag  FROM  tag WHERE tag.id_tag=?";
-    private static final String FIND_TAGS_BY_CERTIFICATE_ID = "SELECT tag.id_tag, tag.name_tag  FROM  tag " +
-            " JOIN certificate_tag ON tag.id_tag=certificate_tag.id_tag" +
-            " WHERE certificate_tag.certificate_id=?";
-    private static final String FIND_TAG_BY_NAME = "SELECT tag.id_tag, tag.name_tag  FROM tag WHERE tag.name_tag LIKE ?";
-    private static final String DELETE_TAG_BY_ID = "DELETE FROM tag WHERE tag.id_tag=?";
-    public static final String ADD_TAG = "INSERT INTO tag (name_tag) VALUES  (?)";
 
-    @Autowired
-    public TagDaoImpl(JdbcTemplate jdbcTemplate, TagMapper tagMapper, TagConverter tagConverter) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.tagMapper = tagMapper;
-        this.tagConverter = tagConverter;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
+    private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger(TagDaoImpl.class);
+    public static final String SELECT_ALL_TAG = "FROM Tag";
+    private static final String FIND_TAG_BY_NAME = "FROM Tag WHERE tagName=:tagName";
+    private static final String SELECT_TOP_TAG = "select tag.id_tag,tag.name_tag,g.cnt from tag, (select t2.id_tag as tag_id,t2.name_tag as name_tag, count(*) as cnt,sum(t.price)  " +
+            "from purchase p " +
+            "         join  purchase_certificate p1 on p.purchase_id=p1.purchase_id " +
+            "         join certificate t on  p1.certificate_id=t.certificate_id " +
+            "         join certificate_tag t1 on t.certificate_id=t1.certificate_id " +
+            "         join tag t2 on t1.id_tag = t2.id_tag " +
+            "group by t2.id_tag " +
+            "order by 3 desc,4 desc LIMIT 1 ) g  " +
+            "where tag.id_tag=g.tag_id;";
 
     @Override
     public Optional<TagDto> findEntityById(long id) {
-        List<Tag> tagList = jdbcTemplate.query(FIND_TAG_BY_ID, tagMapper, id);
-        return tagList.isEmpty() ? Optional.empty() : Optional.ofNullable(tagConverter.convertTo(tagList.get(0)));
+        Tag tag = entityManager.find(Tag.class, id);
+        return tag != null ? Optional.ofNullable(TagConverter.convertTo(tag)) : Optional.empty();
     }
 
     @Override
-    public boolean delete(long id) {
-        return jdbcTemplate.update(DELETE_TAG_BY_ID, id) > 0;
-
+    public void delete(TagDto tagDto) {
+        Tag tag = entityManager.find(Tag.class, tagDto.getTagId());
+        entityManager.remove(tag);
+        entityManager.flush();
     }
 
     @Override
     public TagDto create(TagDto entity) {
-        Tag tag = tagConverter.convertFrom(entity);
-        KeyHolder key = new GeneratedKeyHolder();
-        PreparedStatementCreator preparedStatementCreator = connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(ADD_TAG,
-                    Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, tag.getTagName());
-            return preparedStatement;
-        };
-        jdbcTemplate.update(preparedStatementCreator, key);
-        Number id = key.getKey();
-        if (id != null) {
-            tag.setTagId(id.longValue());
-        }
-        return tagConverter.convertTo(tag);
+        Tag tag = TagConverter.convertFrom(entity);
+        entityManager.persist(tag);
+        entity.setTagId(tag.getTagId());
+        return entity;
     }
 
     @Override
@@ -75,14 +60,23 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Optional<TagDto> findByName(String tagName) {
-        List<Tag> tagList = jdbcTemplate.query(FIND_TAG_BY_NAME, tagMapper, tagName);
-        return Optional.ofNullable(tagConverter.convertTo(tagList.get(0)));
+    public List<TagDto> findAll(int offset, int limit) {
+        List<Tag> listTag = entityManager.createQuery(SELECT_ALL_TAG, Tag.class)
+                .setFirstResult(offset).setMaxResults(limit).getResultList();
+        ;
+        return TagConverter.convertTo(listTag);
     }
 
     @Override
-    public List<TagDto> findListByCertificateId(long certificateId) {
-        List<Tag> listTag = jdbcTemplate.query(FIND_TAGS_BY_CERTIFICATE_ID, tagMapper, certificateId);
-        return tagConverter.convertTo(listTag);
+    public Optional<TagDto> findByName(String tagName) {
+        Query query = entityManager.createQuery(FIND_TAG_BY_NAME).setParameter("tagName", tagName);
+        List<Tag> listTag = query.getResultList();
+        return listTag.size() != 0 ? Optional.of(TagConverter.convertTo(listTag).get(0)) : Optional.empty();
+    }
+
+    @Override
+    public Optional<TagDto> findPopularTag() {
+        List<Tag> listTag = entityManager.createNativeQuery(SELECT_TOP_TAG, Tag.class).getResultList();
+        return listTag.size() != 0 ? Optional.of(TagConverter.convertTo(listTag).get(0)) : Optional.empty();
     }
 }

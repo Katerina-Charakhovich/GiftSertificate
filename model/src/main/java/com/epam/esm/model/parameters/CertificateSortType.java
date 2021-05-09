@@ -23,6 +23,6 @@ public enum CertificateSortType {
     public static Optional<CertificateSortType> getByType(String type) {
         return Arrays
                 .stream(CertificateSortType.values())
-                .filter(s -> s.getType().getName().equalsIgnoreCase(type)).findFirst();
+                .filter(s -> s.getType().getParamName().equalsIgnoreCase(type)).findFirst();
     }
 }

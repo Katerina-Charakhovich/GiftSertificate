@@ -1,11 +1,12 @@
 package com.epam.esm.web.controller;
 
-import com.epam.esm.model.entity.GiftCertificateDto;
+import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.IllegalRequestParameterException;
 import com.epam.esm.service.exeption.IllegalRequestSortParameterException;
 import com.epam.esm.service.exeption.RecourseExistException;
 import com.epam.esm.service.exeption.RecourseNotExistException;
+import com.epam.esm.web.utils.HateoasWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
-
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -31,11 +32,22 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/certificates", produces = APPLICATION_JSON_VALUE)
 @Validated
 public class GiftCertificateController {
+    private static final String DEFAULT_OFFSET = "0";
+    private static final String DEFAULT_LIMIT = "10";
+    private static final int MAX_LIMIT = 30;
+    private static final int MIN_LIMIT = 1;
+    private static final String INVALID_OFFSET_MESSAGE = "invalid value parameter offset";
+    private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
+    private static final String OFFSET = "offset";
+    private static final String LIMIT = "limit";
+    private static final String COMMA = ",";
     private final CertificateService certificateService;
+    private final HateoasWrapper hateoasWrapper;
 
     @Autowired
-    public GiftCertificateController(CertificateService certificateService) {
+    public GiftCertificateController(CertificateService certificateService, HateoasWrapper hateoasWrapper) {
         this.certificateService = certificateService;
+        this.hateoasWrapper = hateoasWrapper;
     }
 
     /**
@@ -48,7 +60,7 @@ public class GiftCertificateController {
     @GetMapping("/{id}")
     public ResponseEntity<GiftCertificateDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         GiftCertificateDto giftCertificate = certificateService.findEntityById(id);
-        return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperGiftCertificateDto(giftCertificate), HttpStatus.OK);
     }
 
     /**
@@ -74,9 +86,9 @@ public class GiftCertificateController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<GiftCertificateDto> addCertificate(
             @Valid @RequestBody GiftCertificateDto giftCertificate)
-            throws RecourseExistException {
+            throws RecourseExistException, RecourseNotExistException {
         GiftCertificateDto createCertificate = certificateService.add(giftCertificate);
-        return new ResponseEntity<>(createCertificate, HttpStatus.CREATED);
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperGiftCertificateDto(createCertificate), HttpStatus.CREATED);
     }
 
     /**
@@ -89,9 +101,27 @@ public class GiftCertificateController {
      */
     @GetMapping
     public ResponseEntity<List<GiftCertificateDto>> findListCertificate(
+            @Valid @RequestParam(required = false, value = OFFSET, defaultValue = DEFAULT_OFFSET)
+            @Min(value = 0, message = INVALID_OFFSET_MESSAGE) int offset,
+            @Valid @RequestParam(required = false, value = LIMIT, defaultValue = DEFAULT_LIMIT)
+            @Min(value = MIN_LIMIT, message = INVALID_LIMIT_MESSAGE)
+            @Max(value = MAX_LIMIT, message = INVALID_LIMIT_MESSAGE) int limit,
             @RequestParam Map<String, String> allRequestParam)
-            throws IllegalRequestSortParameterException, IllegalRequestParameterException {
-        return new ResponseEntity<>(certificateService.findGiftCertificateListByParams(allRequestParam), HttpStatus.FOUND);
+            throws IllegalRequestSortParameterException,
+            IllegalRequestParameterException {
+        if (allRequestParam.containsKey(LIMIT)) {
+            allRequestParam.remove(LIMIT);
+        }
+        if (allRequestParam.containsKey(OFFSET)) {
+            allRequestParam.remove(OFFSET);
+        }
+        Map<String, List<String>> params = new HashMap<>();
+        for (Map.Entry<String, String> entry : allRequestParam.entrySet()
+        ) {
+            params.put(entry.getKey(), Arrays.asList(entry.getValue().split(COMMA)));
+        }
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperListGiftCertificateDto(
+                certificateService.findGiftCertificateListByParams(params, offset, limit)), HttpStatus.FOUND);
     }
 
     /**
@@ -107,6 +137,6 @@ public class GiftCertificateController {
             @PathVariable @Positive long id,
             @RequestBody GiftCertificateDto giftCertificate) throws RecourseNotExistException {
         giftCertificate.setId(id);
-        return new ResponseEntity<>(certificateService.update(giftCertificate), HttpStatus.OK);
+        return new ResponseEntity<>(hateoasWrapper.hateoasWrapperGiftCertificateDto(certificateService.update(giftCertificate)), HttpStatus.OK);
     }
 }

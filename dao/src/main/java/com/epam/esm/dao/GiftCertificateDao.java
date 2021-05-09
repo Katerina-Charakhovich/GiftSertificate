@@ -1,6 +1,6 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.model.entity.GiftCertificateDto;
+import com.epam.esm.model.dto.GiftCertificateDto;
 
 import java.util.List;
 import java.util.Map;
@@ -13,22 +13,13 @@ import java.util.Optional;
  * @version 1.0.0
  */
 public interface GiftCertificateDao extends BaseDao<GiftCertificateDto> {
-    /**
+ /*   /**
      * Delete certificate link wifh tag
      *
      * @param id the certificate id
      * @return boolean
      */
-    boolean deleteLinkTagById(long id);
-
-    /**
-     * Add certificate link wifh tag
-     *
-     * @param certificateId the certificate id
-     * @param tagId         the tag id
-     * @return boolean
-     */
-    boolean addLinkTag(long certificateId, long tagId);
+  /*  boolean deleteLinkTagById(long id);*/
 
     /**
      * Find certificates wifh tags by parameters
@@ -36,7 +27,7 @@ public interface GiftCertificateDao extends BaseDao<GiftCertificateDto> {
      * @param groupParams the group of parameters search and sort
      * @return list
      */
-    List<GiftCertificateDto> findEntityByParams(Map<String, String> groupParams);
+    List<GiftCertificateDto> findEntityByParams(Map<String, List<String>> groupParams, int offset,int limit);
 
     /**
      * Find certificate by name

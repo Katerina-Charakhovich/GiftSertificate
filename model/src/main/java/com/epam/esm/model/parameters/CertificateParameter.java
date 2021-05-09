@@ -4,29 +4,29 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum CertificateParameter {
-    TAG_NAME("tagName", TableColumnName.TAG_DAO_NAME),
-    CERTIFICATE_NAME("name", TableColumnName.CERTIFICATE_DAO_NAME),
-    CERTIFICATE_DESCRIPTION("description", TableColumnName.CERTIFICATE_DAO_DESCRIPTION),
-    CREATE_DATE("createDate", TableColumnName.CERTIFICATE_DAO_CREATE_DATE);
-    String name;
-    String tableColumn;
+    TAG_NAME("tagName", TableName.TABLE_TAG),
+    CERTIFICATE_NAME("name", TableName.TABLE_CERTIFICATE),
+    CERTIFICATE_DESCRIPTION("description", TableName.TABLE_CERTIFICATE),
+    CREATE_DATE("createDate", TableName.TABLE_CERTIFICATE);
+    String paramName;
+    String entityName;
 
-    CertificateParameter(String name, String tableColumn) {
-        this.name = name;
-        this.tableColumn = tableColumn;
+    CertificateParameter(String paramName, String entityName) {
+        this.paramName = paramName;
+        this.entityName = entityName;
     }
 
-    public String getName() {
-        return name;
+    public String getParamName() {
+        return paramName;
     }
 
-    public String getTableColumn() {
-        return tableColumn;
+    public String getEntityName() {
+        return entityName;
     }
 
     public static Optional<CertificateParameter> getByName(String name) {
         return Arrays
                 .stream(CertificateParameter.values())
-                .filter(s -> s.getName().equals(name)).findFirst();
+                .filter(s -> s.getParamName().equals(name)).findFirst();
     }
 }
