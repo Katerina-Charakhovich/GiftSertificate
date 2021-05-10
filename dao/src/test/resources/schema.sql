@@ -26,7 +26,10 @@ CREATE TABLE certificate_tag (
 CREATE TABLE user(
    user_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
    user_name varchar(50) NOT NULL,
-   user_surname varchar(50) NOT NULL
+   user_surname varchar(50) NOT NULL,
+   login varchar(50) NOT NULL,
+   password varchar(50) NOT NULL,
+    role       enum ('ROLE_USER', 'ROLE_ADMIN') default 'ROLE_USER' not null
 );
 CREATE TABLE purchase (
   purchase_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,

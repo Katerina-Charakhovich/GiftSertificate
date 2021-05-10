@@ -8,6 +8,7 @@ import com.epam.esm.web.utils.HateoasWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +56,7 @@ public class TagController {
      * @return tag
      * @throws RecourseNotExistException if tag isn't found
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public ResponseEntity<TagDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         TagDto tagDto = tagService.findEntityById(id);
@@ -67,6 +69,8 @@ public class TagController {
      * @param id the id
      * @throws RecourseNotExistException if  such GiftCertificate id isn't found
      */
+   // @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteTag(@PathVariable @Positive long id) throws RecourseNotExistException {
@@ -78,6 +82,7 @@ public class TagController {
      *
      * @return the tag
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<TagDto> addTag(@Valid @RequestBody TagDto tagDto
     ) throws RecourseExistException, RecourseNotExistException {
@@ -104,6 +109,7 @@ public class TagController {
      *
      * @return tag
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/popular")
     public ResponseEntity<TagDto> findPopularTag() {
         Optional<TagDto> tagDtoOpt = tagService.findPopularTag();

@@ -14,13 +14,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@ContextConfiguration(classes = TestConfig.class)
-@Sql({"classpath:drop.sql", "classpath:schema.sql", "classpath:data.sql"})
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@ActiveProfiles("testt")
+//@ContextConfiguration(classes = TestConfig.class)
+//@Sql({"classpath:drop.sql", "classpath:schema.sql", "classpath:data.sql"})
 class GiftCertificateDaoImplTest {
-    @Autowired
+  /*  @Autowired
     private GiftCertificateDaoImpl giftCertificateDaoImpl;
 
 

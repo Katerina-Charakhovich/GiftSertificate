@@ -7,6 +7,7 @@ import com.epam.esm.web.utils.HateoasWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,7 @@ public class PurchaseController {
      *
      * @return list
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<PurchaseDto>> findAll(
             @Valid @RequestParam(required = false, value = OFFSET, defaultValue = DEFAULT_OFFSET)
@@ -69,6 +71,7 @@ public class PurchaseController {
      * @return Purchase
      * @throws RecourseNotExistException if certificate isn't found
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         PurchaseDto purchaseDto = purchaseService.findEntityById(id);

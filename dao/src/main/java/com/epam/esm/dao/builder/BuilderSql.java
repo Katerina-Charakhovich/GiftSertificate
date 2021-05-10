@@ -65,6 +65,9 @@ public class BuilderSql {
     }
 
     public static String buildSortCertificateByParameters(List<String> params) {
+        if (params == null) {
+            return EMPTY;
+        }
         if (params.size() == 0) {
             return EMPTY;
         }

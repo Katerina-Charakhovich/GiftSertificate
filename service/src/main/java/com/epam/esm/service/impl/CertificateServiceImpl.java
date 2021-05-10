@@ -116,7 +116,6 @@ public class CertificateServiceImpl implements CertificateService {
             }
             exist.setListTagDto(update.getListTagDto());
         }
-        exist.setListTagDto(update.getListTagDto());
         return exist;
     }
 }

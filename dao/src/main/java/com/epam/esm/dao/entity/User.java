@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,6 +24,13 @@ public class User extends CommonEntity {
     String userName;
     @Column(name = "user_surname")
     String userSurname;
-    @OneToMany(mappedBy = "user", orphanRemoval = true,fetch = FetchType.LAZY)
+    @Column(name = "login")
+    String login;
+    @Column(name = "password")
+    String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    Role role;
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     List<Purchase> listPurchase;
 }

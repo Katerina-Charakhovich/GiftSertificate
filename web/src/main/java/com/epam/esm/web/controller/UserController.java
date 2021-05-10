@@ -8,6 +8,7 @@ import com.epam.esm.web.utils.HateoasWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,7 @@ public class UserController {
      * @return tag
      * @throws RecourseNotExistException if tag isn't found
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         UserDto userDto = userService.findEntityById(id);
@@ -83,6 +85,7 @@ public class UserController {
      *
      * @return list
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/purchases")
     public ResponseEntity<List<PurchaseDto>> findPurchaseByUserId(@PathVariable @Positive long id) throws RecourseNotExistException {
         return new ResponseEntity(hateoasWrapper.hateoasWrapperListPurchaseDto(purchaseService.findListPurchaseByUserId(id)), HttpStatus.OK);
@@ -93,6 +96,7 @@ public class UserController {
      *
      * @return PurchaseShortDto
      */
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/{id}/purchases")
     public ResponseEntity<PurchaseShortDto> addPurchaseByUserId(@Valid @RequestBody PurchaseShortDto purchaseCreateDto,
                                                                 @PathVariable @Positive long id) throws RecourseNotExistException {
@@ -100,6 +104,7 @@ public class UserController {
         return new ResponseEntity(purchaseService.addPurchase(purchaseCreateDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/purchases/{idPurchase}")
     public ResponseEntity<List<PurchaseDto>> findPurchaseByUserId(
             @PathVariable @Positive long id,

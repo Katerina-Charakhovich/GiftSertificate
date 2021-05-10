@@ -10,6 +10,7 @@ import com.epam.esm.web.utils.HateoasWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +58,7 @@ public class GiftCertificateController {
      * @return GiftCertificate
      * @throws RecourseNotExistException if certificate isn't found
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public ResponseEntity<GiftCertificateDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         GiftCertificateDto giftCertificate = certificateService.findEntityById(id);
@@ -69,6 +71,7 @@ public class GiftCertificateController {
      * @param id the id
      * @throws RecourseNotExistException if  such GiftCertificate id isn't found
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteCertificate(
@@ -83,6 +86,7 @@ public class GiftCertificateController {
      * @param giftCertificate param the gift certificate
      * @throws RecourseExistException such GiftCertificate is exist
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<GiftCertificateDto> addCertificate(
             @Valid @RequestBody GiftCertificateDto giftCertificate)
@@ -132,6 +136,8 @@ public class GiftCertificateController {
      * @return the gift certificate dto
      * @throws RecourseNotExistException if gift certificate with such id isn't found
      */
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("anonymous()")
     @PutMapping("/{id}")
     public ResponseEntity<GiftCertificateDto> updateCertificate(
             @PathVariable @Positive long id,

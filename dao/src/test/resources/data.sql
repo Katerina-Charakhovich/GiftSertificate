@@ -17,9 +17,9 @@ INSERT INTO certificate_tag (certificate_id, id_tag) VALUES
 (2, 3),
 (3, 1);
 INSERT INTO user (user_id, user_name,user_surname) VALUES
-(1, 'Михаил', 'Черехович'),
-(2, 'Виктрор', 'Высоцкий'),
-(3, 'Виталий', 'Шахлевич');
+(1, 'Михаил', 'Черехович',misha,12345),
+(2, 'Виктрор', 'Высоцкий',victor,123456),
+(3, 'Виталий', 'Шахлевич',vital,123456);
 INSERT INTO purchase (purchase_id, user_id, purchase_price, create_date, last_update_date) VALUES
 (1, 1, 120.00, '2021-04-23 11:19:30', '2021-04-23 11:19:30'),
 (2, 2, 100.00, '2021-04-23 11:19:30', '2021-04-23 11:19:30'),

@@ -1,7 +1,8 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.UserDao;
-import com.epam.esm.dao.impl.UserDaoImpl;
+import com.epam.esm.dao.UserRepository;
+import com.epam.esm.dao.entity.Role;
+import com.epam.esm.dao.entity.User;
 import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
@@ -10,49 +11,52 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
 
 class UserServiceImplTest {
     @InjectMocks
     private UserService userService;
     @Mock
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() {
-        userDao = Mockito.mock(UserDaoImpl.class);
-        userService = new UserServiceImpl(userDao);
+        userRepository = Mockito.mock(UserRepository.class);
+        userService = new UserServiceImpl(userRepository);
     }
 
     @Test
     void findEntityById() throws RecourseNotExistException {
         long userId = 1;
+        User user = new User(userId,"userName","userSurName","login","password", Role.ROLE_USER,null);
         UserDto userDto = new UserDto(userId,"userName","userSurName",null);
-        Mockito.when(userDao.findEntityById(userId)).thenReturn(Optional.of(userDto));
-        UserDto userDto1 = userService.findEntityById(userId);
-        assertEquals(userDto, userService.findEntityById(userId));
+        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        assertEquals( userDto, userService.findEntityById(userId));
     }
     @Test
     void findEntityByIdTestNegative() {
         long id = 12;
-        Mockito.when(userDao.findEntityById(id)).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(RecourseNotExistException.class,()-> userService.findEntityById(id));
     }
     @Test
     void findAll() {
-        int offset=0;
-        int limit=2;
-        List<UserDto> users = new ArrayList<>();
-        Mockito.when(userDao.findAll(anyInt(), anyInt())).thenReturn(users);
+        int pageNo=0;
+        int pageSize=2;
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        List<User> listUser=new ArrayList<>();
+        Page<User> userPage =new PageImpl<>(listUser);
+        Mockito.when(userRepository.findAll(paging)).thenReturn(userPage);
         List<UserDto> expected = new ArrayList<>();
-        List<UserDto> actual = userService.findAll(offset,limit);
+        List<UserDto> actual = userService.findAll(pageNo, pageSize);
         assertEquals(expected, actual);
     }
 
