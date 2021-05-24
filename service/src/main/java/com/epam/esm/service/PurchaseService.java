@@ -21,8 +21,9 @@ public interface PurchaseService extends CommonService<PurchaseDto> {
      * Find purchases be user ID
      *
      * @param userId the user id
+     * @param pageN the user id
      * @return list
      * @throws RecourseNotExistException
      */
-    List<PurchaseDto> findListPurchaseByUserId(long userId) throws RecourseNotExistException;
+    List<PurchaseDto> findListPurchaseByUserId(long userId,int pageN, int pageSize) throws RecourseNotExistException;
 }

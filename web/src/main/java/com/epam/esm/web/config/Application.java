@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = "com.epam.esm")
 @ComponentScan("com.epam.esm")
 @EntityScan(basePackages = {"com.epam.esm.dao"})
-@EnableJpaRepositories(basePackages = {"com.epam.esm.dao"} )
+@EnableJpaRepositories(basePackages = {"com.epam.esm.dao"})
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

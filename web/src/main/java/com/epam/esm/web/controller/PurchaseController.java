@@ -12,8 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
@@ -30,14 +28,10 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/purchases", produces = APPLICATION_JSON_VALUE)
 @Validated
 public class PurchaseController {
-    private static final String DEFAULT_OFFSET = "0";
-    private static final String DEFAULT_LIMIT = "10";
-    private static final int MAX_LIMIT = 30;
-    private static final int MIN_LIMIT = 1;
-    private static final String INVALID_OFFSET_MESSAGE = "invalid value parameter offset";
-    private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
-    private static final String OFFSET = "offset";
-    private static final String LIMIT = "limit";
+    private static final String DEFAULT_PAGE_N = "0";
+    private static final String DEFAULT_PAGE_SIZE = "10";
+    private static final String PAGE_N = "pageN";
+    private static final String PAGE_SIZE = "pageSize";
     private PurchaseService purchaseService;
     private final HateoasWrapper hateoasWrapper;
 
@@ -48,24 +42,23 @@ public class PurchaseController {
     }
 
     /**
-     * Find all users
+     * Find all purchases
      *
      * @return list
      */
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<PurchaseDto>> findAll(
-            @Valid @RequestParam(required = false, value = OFFSET, defaultValue = DEFAULT_OFFSET)
-            @Min(value = 0, message = INVALID_OFFSET_MESSAGE) int offset,
-            @Valid @RequestParam(required = false, value = LIMIT, defaultValue = DEFAULT_LIMIT)
-            @Min(value = MIN_LIMIT, message = INVALID_LIMIT_MESSAGE)
-            @Max(value = MAX_LIMIT, message = INVALID_LIMIT_MESSAGE) int limit) {
-        List<PurchaseDto> list = purchaseService.findAll(offset, limit);
+            @Valid @RequestParam(required = false, value = PAGE_N, defaultValue = DEFAULT_PAGE_N)
+            int pageN,
+            @Valid @RequestParam(required = false, value = PAGE_SIZE, defaultValue = DEFAULT_PAGE_SIZE)
+            int pageSize) {
+        List<PurchaseDto> list = purchaseService.findAll(pageN, pageSize);
         return new ResponseEntity<>(hateoasWrapper.hateoasWrapperListPurchaseDto(list), HttpStatus.OK);
     }
 
     /**
-     * Find by id gift certificate.
+     * Find by id purchase
      *
      * @param id the id
      * @return Purchase

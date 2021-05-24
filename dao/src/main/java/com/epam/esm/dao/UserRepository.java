@@ -5,7 +5,12 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-
+/**
+ * The interface User repository.
+ *
+ * @author Katerina Charakhovich
+ * @version 1.0.0
+ */
 @Repository
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     /**

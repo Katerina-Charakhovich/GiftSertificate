@@ -1,11 +1,10 @@
 package com.epam.esm.service.converter;
 
 import com.epam.esm.dao.entity.Purchase;
-import com.epam.esm.dao.entity.Role;
+import com.epam.esm.model.dto.RoleUser;
 import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.dao.entity.User;
 import com.epam.esm.model.dto.*;
-import com.epam.esm.service.utils.Encryptor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +35,9 @@ public class UserConverter {
         user.setLogin(entity.getLogin());
         user.setUserSurname(entity.getSurname());
         user.setUserName(entity.getName());
-        user.setPassword(Encryptor.hashPassword(entity.getPassword()));
-        user.setRole(Role.ROLE_USER);
+        user.setPassword(entity.getPassword());
+        //user.setPassword(Encryptor.hashPassword(entity.getPassword()));
+        user.setRoleUser(RoleUser.ROLE_USER);
         return user;
     }
 

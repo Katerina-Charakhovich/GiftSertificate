@@ -1,7 +1,6 @@
 package com.epam.esm.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
@@ -21,7 +20,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GiftCertificateDto extends Dto {
+public class GiftCertificateUpdateDto extends Dto {
     private Long id;
     @NotBlank
     @Pattern(regexp = "[a-zA-Zа-яА-ЯёЁ0-9\\s?!,.:'\\-]{3,45}")
@@ -42,7 +41,6 @@ public class GiftCertificateDto extends Dto {
     LocalDateTime lastUpdateDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     LocalDateTime createDate;
-    @JsonIgnore
-    StateCertificate state;
-    List<TagDto> listTagDto;
+    List<TagDto> listAddTag;
+    List<TagDto> listDelTag;
 }

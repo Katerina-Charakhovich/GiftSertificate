@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @AllArgsConstructor
@@ -19,11 +19,10 @@ import javax.validation.constraints.Size;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserAuthDto extends Dto {
     @NotBlank
-    @Pattern(regexp = "[a-zA-z]{20}")
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 80)
     String login;
     @NotBlank
-    @Size(min = 8, max = 20)
-    @Pattern(regexp = "^[a-zA-Z0-9]{20}")
+    @Size(min = 8, max = 80)
     String password;
+    private RoleUser role;
 }

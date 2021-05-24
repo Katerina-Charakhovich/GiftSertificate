@@ -1,6 +1,7 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.GiftCertificateUpdateDto;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.IllegalRequestParameterException;
 import com.epam.esm.service.exeption.IllegalRequestSortParameterException;
@@ -15,8 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.*;
 
@@ -33,14 +32,10 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/certificates", produces = APPLICATION_JSON_VALUE)
 @Validated
 public class GiftCertificateController {
-    private static final String DEFAULT_OFFSET = "0";
-    private static final String DEFAULT_LIMIT = "10";
-    private static final int MAX_LIMIT = 30;
-    private static final int MIN_LIMIT = 1;
-    private static final String INVALID_OFFSET_MESSAGE = "invalid value parameter offset";
-    private static final String INVALID_LIMIT_MESSAGE = "invalid value parameter limit";
-    private static final String OFFSET = "offset";
-    private static final String LIMIT = "limit";
+    private static final String DEFAULT_PAGE_N = "0";
+    private static final String DEFAULT_PAGE_SIZE = "10";
+    private static final String PAGE_N = "pageN";
+    private static final String PAGE_SIZE = "pageSize";
     private static final String COMMA = ",";
     private final CertificateService certificateService;
     private final HateoasWrapper hateoasWrapper;
@@ -105,27 +100,22 @@ public class GiftCertificateController {
      */
     @GetMapping
     public ResponseEntity<List<GiftCertificateDto>> findListCertificate(
-            @Valid @RequestParam(required = false, value = OFFSET, defaultValue = DEFAULT_OFFSET)
-            @Min(value = 0, message = INVALID_OFFSET_MESSAGE) int offset,
-            @Valid @RequestParam(required = false, value = LIMIT, defaultValue = DEFAULT_LIMIT)
-            @Min(value = MIN_LIMIT, message = INVALID_LIMIT_MESSAGE)
-            @Max(value = MAX_LIMIT, message = INVALID_LIMIT_MESSAGE) int limit,
+            @Valid @RequestParam(required = false, value = PAGE_N, defaultValue = DEFAULT_PAGE_N)
+                    int pageN,
+            @Valid @RequestParam(required = false, value = PAGE_SIZE, defaultValue = DEFAULT_PAGE_SIZE)
+                    int pageSize,
             @RequestParam Map<String, String> allRequestParam)
             throws IllegalRequestSortParameterException,
             IllegalRequestParameterException {
-        if (allRequestParam.containsKey(LIMIT)) {
-            allRequestParam.remove(LIMIT);
-        }
-        if (allRequestParam.containsKey(OFFSET)) {
-            allRequestParam.remove(OFFSET);
-        }
+        allRequestParam.remove(PAGE_SIZE);
+        allRequestParam.remove(PAGE_N);
         Map<String, List<String>> params = new HashMap<>();
         for (Map.Entry<String, String> entry : allRequestParam.entrySet()
         ) {
             params.put(entry.getKey(), Arrays.asList(entry.getValue().split(COMMA)));
         }
         return new ResponseEntity<>(hateoasWrapper.hateoasWrapperListGiftCertificateDto(
-                certificateService.findGiftCertificateListByParams(params, offset, limit)), HttpStatus.FOUND);
+                certificateService.findGiftCertificateListByParams(params, pageN, pageSize)), HttpStatus.FOUND);
     }
 
     /**
@@ -136,12 +126,11 @@ public class GiftCertificateController {
      * @return the gift certificate dto
      * @throws RecourseNotExistException if gift certificate with such id isn't found
      */
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PreAuthorize("anonymous()")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<GiftCertificateDto> updateCertificate(
             @PathVariable @Positive long id,
-            @RequestBody GiftCertificateDto giftCertificate) throws RecourseNotExistException {
+            @RequestBody GiftCertificateUpdateDto giftCertificate) throws RecourseNotExistException {
         giftCertificate.setId(id);
         return new ResponseEntity<>(hateoasWrapper.hateoasWrapperGiftCertificateDto(certificateService.update(giftCertificate)), HttpStatus.OK);
     }

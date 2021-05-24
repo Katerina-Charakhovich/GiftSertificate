@@ -1,5 +1,7 @@
 package com.epam.esm.dao.entity;
 
+import com.epam.esm.model.dto.RoleUser;
+import com.epam.esm.model.dto.StateCertificate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +36,9 @@ public class GiftCertificate extends CommonEntity {
     LocalDateTime lastUpdateDate;
     @Column(name = "create_date")
     LocalDateTime createDate;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state")
+    StateCertificate state;
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "certificate_tag", joinColumns = {
             @JoinColumn(name = "certificate_id")},
