@@ -22,8 +22,5 @@ public class PurchaseShortDto extends Dto {
     Long id;
     @Positive
     Long userId;
-    @Positive
-    @Digits(integer = 5, fraction = 2)
-    private BigDecimal price;
     List<Long> listGiftCertificate;
 }

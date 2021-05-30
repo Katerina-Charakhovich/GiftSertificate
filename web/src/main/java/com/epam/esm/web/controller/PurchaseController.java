@@ -1,6 +1,7 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.model.dto.PurchaseDto;
+import com.epam.esm.service.AuthenticatedUserService;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import com.epam.esm.web.utils.HateoasWrapper;
@@ -33,11 +34,13 @@ public class PurchaseController {
     private static final String PAGE_N = "pageN";
     private static final String PAGE_SIZE = "pageSize";
     private PurchaseService purchaseService;
+    private final AuthenticatedUserService authenticatedUserService;
     private final HateoasWrapper hateoasWrapper;
 
     @Autowired
-    public PurchaseController(PurchaseService purchaseService, HateoasWrapper hateoasWrapper) {
+    public PurchaseController(PurchaseService purchaseService, AuthenticatedUserService authenticatedUserService, HateoasWrapper hateoasWrapper) {
         this.purchaseService = purchaseService;
+        this.authenticatedUserService = authenticatedUserService;
         this.hateoasWrapper = hateoasWrapper;
     }
 
@@ -46,7 +49,7 @@ public class PurchaseController {
      *
      * @return list
      */
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<PurchaseDto>> findAll(
             @Valid @RequestParam(required = false, value = PAGE_N, defaultValue = DEFAULT_PAGE_N)
@@ -64,7 +67,8 @@ public class PurchaseController {
      * @return Purchase
      * @throws RecourseNotExistException if certificate isn't found
      */
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')||" +
+            "(hasAuthority('ROLE_USER')&&@authenticatedUserService.isAuthUserByPurchaseId(#id))")
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         PurchaseDto purchaseDto = purchaseService.findEntityById(id);

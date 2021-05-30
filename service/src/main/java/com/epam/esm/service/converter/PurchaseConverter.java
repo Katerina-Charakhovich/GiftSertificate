@@ -31,8 +31,7 @@ public class PurchaseConverter {
         PurchaseShortDto purchaseDto = new PurchaseShortDto();
         purchaseDto.setId(entity.getPurchaseId());
         purchaseDto.setUserId(entity.getUser().getUserId());
-        purchaseDto.setPrice(entity.getPrice());
-        List<Long> listGiftCertificateId = entity.getListGiftCertificate().stream().map(s -> s.getId()).collect(Collectors.toList());
+        List<Long> listGiftCertificateId = entity.getListGiftCertificate().stream().map(GiftCertificate::getId).collect(Collectors.toList());
         purchaseDto.setListGiftCertificate(listGiftCertificateId);
         return purchaseDto;
     }
@@ -45,7 +44,6 @@ public class PurchaseConverter {
         User user = new User();
         user.setUserId(entity.getUserId());
         purchase.setUser(user);
-        purchase.setPrice(entity.getPrice());
         List<GiftCertificate> listGiftCertificate = new ArrayList<>();
         for (Long id : entity.getListGiftCertificate()
         ) {

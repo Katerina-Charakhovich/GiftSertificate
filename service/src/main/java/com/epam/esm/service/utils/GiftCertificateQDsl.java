@@ -10,21 +10,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GiftCertificateQDsl {
-    /**
-     * Method returns BooleanExpression (QueryDsl predicate), according to input parameters
-     *
-     * @param groupParameters group of parameters
-     * @return the boolean expression
-     */
     private static final String TAG_NAME = "tagName";
     private static final String CERTIFICATE_NAME = "name";
     private static final String CERTIFICATE_DESCRIPTION = "description";
     private static final String SIGN = "%";
     private static final String PARAMETER_SORT = "sort";
 
+    /**
+     * Method returns BooleanExpression (QueryDsl predicate), according to input parameters
+     *
+     * @param groupParameters group of parameters
+     * @return the boolean expression
+     */
     public static BooleanExpression getBooleanExpression(Map<String, List<String>> groupParameters) {
-        Map<String, List<String>> findParams = groupParameters.entrySet().stream().filter(s->!s.getKey().equalsIgnoreCase(PARAMETER_SORT))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<String, List<String>> findParams = groupParameters.entrySet().stream().filter(s -> !s.getKey().equalsIgnoreCase(PARAMETER_SORT))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         QGiftCertificate certificate = QGiftCertificate.giftCertificate;
         BooleanExpression expression = certificate.isNotNull();
         expression.and(certificate.state.eq(StateCertificate.ACTIVE));

@@ -1,6 +1,6 @@
 package com.epam.esm.web.config;
 
-import com.epam.esm.service.CustomUserDetailsService;
+import com.epam.esm.service.AuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,12 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder passwordEncoder;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final AuthenticatedUserService authenticatedUserService;
 
     @Autowired
-    public WebSecurityConfig(BCryptPasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService) {
+    public WebSecurityConfig(BCryptPasswordEncoder passwordEncoder, AuthenticatedUserService authenticatedUserService) {
         this.passwordEncoder = passwordEncoder;
-        this.customUserDetailsService = customUserDetailsService;
+        this.authenticatedUserService = authenticatedUserService;
     }
 
     @Bean
@@ -30,6 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
+         auth.userDetailsService(authenticatedUserService).passwordEncoder(passwordEncoder);
     }
 }

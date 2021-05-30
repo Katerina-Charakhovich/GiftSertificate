@@ -16,10 +16,11 @@ INSERT INTO certificate_tag (certificate_id, id_tag) VALUES
 (2, 2),
 (2, 3),
 (3, 1);
-INSERT INTO user (user_id, user_name,user_surname) VALUES
-(1, 'Михаил', 'Черехович',misha,12345),
-(2, 'Виктрор', 'Высоцкий',victor,123456),
-(3, 'Виталий', 'Шахлевич',vital,123456);
+INSERT INTO user (user_id, user_name,user_surname,login,password,role) VALUES
+('4', 'David', 'Whitney', 'karina_nechai@mail.ru', '123456', 'ROLE_ADMIN'),
+(1, 'Михаил', 'Черехович','misha','12345','ROLE_USER'),
+(2, 'Виктрор', 'Высоцкий','victor','12345','ROLE_USER'),
+(3, 'Виталий', 'Шахлевич','vital','123456','ROLE_USER');
 INSERT INTO purchase (purchase_id, user_id, purchase_price, create_date, last_update_date) VALUES
 (1, 1, 120.00, '2021-04-23 11:19:30', '2021-04-23 11:19:30'),
 (2, 2, 100.00, '2021-04-23 11:19:30', '2021-04-23 11:19:30'),

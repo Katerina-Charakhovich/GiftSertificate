@@ -6,15 +6,18 @@ create table tag
     constraint tag_name_uindex unique (name_tag)
 );
 
-CREATE TABLE certificate (
-  certificate_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  certificate_name VARCHAR(45) NOT NULL,
-  description VARCHAR(1000) NOT NULL,
-  price DECIMAL NOT NULL,
-  duration INT NOT NULL,
-  create_date TIMESTAMP NOT NULL,
-  last_update_date TIMESTAMP NOT NULL
- );
+create table certificate
+(
+    certificate_id   int auto_increment
+        primary key,
+    certificate_name varchar(120)                                         not null,
+    description      varchar(1000)                                        not null,
+    price            decimal(10, 2)                                       not null,
+    duration         int                                                  not null,
+    create_date      timestamp                  default CURRENT_TIMESTAMP not null,
+    last_update_date timestamp                  default CURRENT_TIMESTAMP not null,
+    state            enum ('ACTIVE', 'DELETED') default 'ACTIVE'          not null
+);
 
 CREATE TABLE certificate_tag (
   certificate_id INT NOT NULL,
@@ -29,7 +32,7 @@ CREATE TABLE user(
    user_surname varchar(50) NOT NULL,
    login varchar(50) NOT NULL,
    password varchar(50) NOT NULL,
-    role       enum ('ROLE_USER', 'ROLE_ADMIN') default 'ROLE_USER' not null
+   role       enum ('ROLE_USER', 'ROLE_ADMIN') default 'ROLE_USER' not null
 );
 CREATE TABLE purchase (
   purchase_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,

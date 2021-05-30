@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(long id){
+    public void delete(long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -60,9 +61,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto add(UserRegistrationDto userRegistrationDto) throws RecourseExistException {
-        User user = userRepository.findByLogin(userRegistrationDto.getLogin()).orElseThrow(() ->
-                new RecourseExistException(CustomErrorCode.RECOURSE_USER_EXIST, "User with login={" +
-                        userRegistrationDto.getLogin() + "} exists"));
+        Optional<User> user = userRepository.findByLogin(userRegistrationDto.getLogin());
+        if (user.isPresent()) {
+            throw new RecourseExistException(CustomErrorCode.RECOURSE_USER_EXIST, "User with login={" +
+                    userRegistrationDto.getLogin() + "} exists");
+        }
         User userToSave = UserConverter.convertRegistrationFrom(userRegistrationDto);
         userToSave.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
         return UserConverter.convertTo(userRepository.save(userToSave));

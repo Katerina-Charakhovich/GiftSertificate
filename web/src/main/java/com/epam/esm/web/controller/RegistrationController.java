@@ -7,8 +7,14 @@ import com.epam.esm.service.exeption.RecourseExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -31,7 +37,7 @@ public class RegistrationController {
      */
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@RequestBody UserRegistrationDto userRegistrationDto) throws RecourseExistException {
-        UserDto userDto=userService.add(userRegistrationDto);
+        UserDto userDto = userService.add(userRegistrationDto);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 }

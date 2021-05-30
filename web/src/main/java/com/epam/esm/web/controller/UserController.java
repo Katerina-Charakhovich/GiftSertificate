@@ -1,17 +1,23 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.model.dto.*;
+import com.epam.esm.service.AuthenticatedUserService;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exeption.RecourseNotExistException;
 import com.epam.esm.web.utils.HateoasWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.SecurityContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -35,12 +41,14 @@ public class UserController {
     private static final String PAGE_SIZE = "pageSize";
     private final UserService userService;
     private final PurchaseService purchaseService;
+    private final AuthenticatedUserService authenticatedUserService;
     private final HateoasWrapper hateoasWrapper;
 
     @Autowired
-    public UserController(UserService userService, PurchaseService purchaseService, HateoasWrapper hateoasWrapper) {
+    public UserController(UserService userService, PurchaseService purchaseService, AuthenticatedUserService authenticatedUserService, HateoasWrapper hateoasWrapper) {
         this.userService = userService;
         this.purchaseService = purchaseService;
+        this.authenticatedUserService = authenticatedUserService;
         this.hateoasWrapper = hateoasWrapper;
     }
 
@@ -51,7 +59,8 @@ public class UserController {
      * @return tag
      * @throws RecourseNotExistException if tag isn't found
      */
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')||" +
+            "(hasAuthority('ROLE_USER')&&@authenticatedUserService.isAuthUserById(#id))")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> findById(@PathVariable @Positive long id) throws RecourseNotExistException {
         UserDto userDto = userService.findEntityById(id);
@@ -63,6 +72,7 @@ public class UserController {
      *
      * @return list
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll(
             @Valid @RequestParam(required = false, value = PAGE_N, defaultValue = DEFAULT_PAGE_N)
@@ -78,7 +88,8 @@ public class UserController {
      *
      * @return list
      */
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')||" +
+            "(hasAuthority('ROLE_USER')&&@authenticatedUserService.isAuthUserById(#id))")
     @GetMapping("/{id}/purchases")
     public ResponseEntity<List<PurchaseDto>> findPurchaseByUserId(
             @PathVariable @Positive long id,
@@ -95,7 +106,7 @@ public class UserController {
      *
      * @return PurchaseShortDto
      */
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')&&@authenticatedUserService.isAuthUserById(#id)")
     @PostMapping("/{id}/purchases")
     public ResponseEntity<PurchaseShortDto> addPurchaseByUserId(@Valid @RequestBody PurchaseShortDto purchaseCreateDto,
                                                                 @PathVariable @Positive long id) throws RecourseNotExistException {
@@ -103,12 +114,5 @@ public class UserController {
         return new ResponseEntity(purchaseService.addPurchase(purchaseCreateDto), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{id}/purchases/{idPurchase}")
-    public ResponseEntity<List<PurchaseDto>> findPurchaseByUserId(
-            @PathVariable @Positive long id,
-            @PathVariable @Positive long idPurchase) throws RecourseNotExistException {
-        PurchaseDto purchaseDto = purchaseService.findEntityById(id);
-        return new ResponseEntity(hateoasWrapper.hateoasWrapperPurchaseDto(purchaseDto), HttpStatus.OK);
-    }
+
 }

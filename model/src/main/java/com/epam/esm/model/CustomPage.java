@@ -11,11 +11,11 @@ public class CustomPage {
     private int pageSize;
     private int pageTotal;
 
-    public CustomPage(int pageNumber,int  pageSize,Long pageTotal) {
-        this.pageSize=(pageTotal>=MAX_PAGE_SIZE||pageSize>=MAX_PAGE_SIZE)?MAX_PAGE_SIZE:
-                (pageSize<MIN_PAGE_SIZE)?MIN_PAGE_SIZE:pageSize;
-        int countPage=pageTotal.intValue()/pageSize;
-        this.pageNumber = (pageNumber-1<MIN_PAGE_NUMBER)?MIN_PAGE_NUMBER:(pageNumber-1>=countPage)?countPage:pageNumber-1;
-        this.pageTotal=pageTotal.intValue();
+    public CustomPage(int pageNumber, int pageSize, Long pageTotal) {
+        this.pageSize = (pageTotal >= MAX_PAGE_SIZE || pageSize >= MAX_PAGE_SIZE) ? MAX_PAGE_SIZE :
+                Math.max(pageSize, MIN_PAGE_SIZE);
+        int countPage = pageTotal.intValue() / pageSize;
+        this.pageNumber = (pageNumber - 1 < MIN_PAGE_NUMBER) ? MIN_PAGE_NUMBER : Math.min(pageNumber - 1, countPage);
+        this.pageTotal = pageTotal.intValue();
     }
 }

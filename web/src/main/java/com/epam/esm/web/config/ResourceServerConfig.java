@@ -33,7 +33,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, CERTIFICATES).permitAll()
                 .antMatchers(HttpMethod.GET, TAGS).permitAll()
                 .anyRequest().authenticated().and()
-                .cors().and().exceptionHandling().and()
-                .csrf().disable();
+                .cors().and().exceptionHandling();
     }
 }

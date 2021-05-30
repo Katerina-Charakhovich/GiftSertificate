@@ -1,6 +1,6 @@
 package com.epam.esm.web.config;
 
-import com.epam.esm.service.CustomUserDetailsService;
+import com.epam.esm.service.AuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +20,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final JwtProperties properties;
     private final AuthenticationManager authenticationManager;
     private final BCryptPasswordEncoder encoder;
-    private final CustomUserDetailsService userDetailsService;
+    private final AuthenticatedUserService userDetailsService;
 
     @Autowired
     public AuthorizationServerConfig(JwtProperties properties, AuthenticationManager authenticationManager,
                                      BCryptPasswordEncoder encoder,
-                                     CustomUserDetailsService userDetailsService) {
+                                     AuthenticatedUserService userDetailsService) {
         this.properties = properties;
         this.authenticationManager = authenticationManager;
         this.encoder = encoder;
@@ -45,7 +45,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new JwtTokenStore(accessTokenConverter());
     }
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints){
         endpoints
                 .userDetailsService(userDetailsService)
                 .reuseRefreshTokens(false)
@@ -56,7 +56,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(AuthorizationServerSecurityConfigurer security){
         security.allowFormAuthenticationForClients();
         security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
     }

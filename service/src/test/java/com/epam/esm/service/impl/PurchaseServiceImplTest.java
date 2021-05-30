@@ -1,7 +1,9 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.*;
+import com.epam.esm.dao.entity.GiftCertificate;
 import com.epam.esm.dao.entity.Purchase;
+import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.dao.entity.User;
 import com.epam.esm.model.dto.*;
 import com.epam.esm.service.PurchaseService;
@@ -39,6 +41,47 @@ class PurchaseServiceImplTest {
         giftCertificateRepository = Mockito.mock(GiftCertificateRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
         purchaseService = new PurchaseServiceImpl(userRepository, purchaseRepository, giftCertificateRepository);
+    }
+
+    @Test
+    void add() throws RecourseNotExistException {
+        long testId = 1L;
+        UseShortDto userShortDto = new UseShortDto(1L, "test", "test");
+        User user = new User(1L, "test", "test", null);
+        User userAfterConvPurchase = new User(1L, null, null,null);
+        TagDto tagDto = new TagDto(1L, "testTag");
+        List<TagDto> tagDtoList = new ArrayList<>();
+        tagDtoList.add(tagDto);
+        Tag tag = new Tag(1L, "testTag");
+        List<Tag> tagList = new ArrayList<>();
+        tagList.add(tag);
+        GiftCertificate giftCertificate = new GiftCertificate(1L, "test", "test", 10,
+                BigDecimal.valueOf(10.2), null, null, StateCertificate.ACTIVE, tagList);
+        GiftCertificate giftCertificateAfterConvPurchase = new GiftCertificate(1L, null, null, 0,
+               null, null, null,null, null);
+        List<GiftCertificate> giftCertificateList = new ArrayList<>();
+        List<GiftCertificate> giftCertificateListAfterConvPurchase = new ArrayList<>();
+        giftCertificateList.add(giftCertificate);
+        giftCertificateListAfterConvPurchase.add(giftCertificateAfterConvPurchase);
+        GiftCertificateDto giftCertificateDto = new GiftCertificateDto(1L, "test", "test", 10,
+                BigDecimal.valueOf(10.2), null, null, StateCertificate.ACTIVE, tagDtoList);
+        List<GiftCertificateDto> giftCertificateDtoList = new ArrayList<>();
+        giftCertificateDtoList.add(giftCertificateDto);
+        List<Long> giftCertificateListId = new ArrayList<>();
+        giftCertificateListId.add(1L);
+        PurchaseShortDto purchaseShortDto = new PurchaseShortDto(1L, 1L,
+                giftCertificateListId);
+        Purchase purchase= new Purchase(1L, user,
+                BigDecimal.valueOf(10, 2), null, null, giftCertificateList);
+        Purchase purchaseAfterConvPurchase= new Purchase(1L, userAfterConvPurchase,
+                BigDecimal.valueOf(10, 2), null, null,  giftCertificateListAfterConvPurchase);
+        Mockito.when(userRepository.findById(testId)).thenReturn(Optional.of(user));
+        Mockito.when(giftCertificateRepository.findById(1L)).thenReturn(Optional.of(giftCertificate));
+        PurchaseDto expected = new PurchaseDto(1L, userShortDto,
+                BigDecimal.valueOf(10, 2), null, null, giftCertificateDtoList);
+        Mockito.when(purchaseRepository.save(purchaseAfterConvPurchase)).thenReturn(purchase);
+        Mockito.when(purchaseRepository.findById(1L)).thenReturn(Optional.of(purchase));
+        assertEquals(expected, purchaseService.addPurchase(purchaseShortDto));
     }
 
     @Test
