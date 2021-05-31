@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("testt")
+@ActiveProfiles("testDao")
 @ContextConfiguration(classes = TestConfig.class)
 @Sql({"classpath:drop.sql", "classpath:schema.sql", "classpath:data.sql"})
 class TagDaoImplTest {

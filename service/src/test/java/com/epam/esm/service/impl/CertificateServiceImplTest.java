@@ -115,5 +115,4 @@ class CertificateServiceImplTest {
                 BigDecimal.valueOf(10.2), null, null, StateCertificate.ACTIVE,tagDtoList);
         assertEquals(expected, certificateService.add(giftCertificateDto));
     }
-
 }

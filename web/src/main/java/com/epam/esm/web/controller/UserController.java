@@ -111,7 +111,9 @@ public class UserController {
     public ResponseEntity<PurchaseShortDto> addPurchaseByUserId(@Valid @RequestBody PurchaseShortDto purchaseCreateDto,
                                                                 @PathVariable @Positive long id) throws RecourseNotExistException {
         purchaseCreateDto.setUserId(id);
-        return new ResponseEntity(purchaseService.addPurchase(purchaseCreateDto), HttpStatus.CREATED);
+        return (!purchaseCreateDto.getListGiftCertificate().isEmpty())?
+        new ResponseEntity(purchaseService.addPurchase(purchaseCreateDto), HttpStatus.CREATED):
+        new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 

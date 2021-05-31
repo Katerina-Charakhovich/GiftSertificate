@@ -17,7 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
-
+/**
+ * The  Registration Controller
+ * It used for Rest Api
+ *
+ * @author Katerina Charakhovich
+ * @version 1.0.0
+ */
 @RestController
 @RequestMapping(produces = APPLICATION_JSON_VALUE)
 @Validated
