@@ -1,11 +1,11 @@
-package com.epam.esm.dao.converter;
+package com.epam.esm.service.converter;
 
 import com.epam.esm.dao.entity.GiftCertificate;
 import com.epam.esm.dao.entity.Purchase;
 import com.epam.esm.dao.entity.User;
 import com.epam.esm.model.dto.GiftCertificateDto;
-import com.epam.esm.model.dto.PurchaseShortDto;
 import com.epam.esm.model.dto.PurchaseDto;
+import com.epam.esm.model.dto.PurchaseShortDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,7 @@ public class PurchaseConverter {
         PurchaseShortDto purchaseDto = new PurchaseShortDto();
         purchaseDto.setId(entity.getPurchaseId());
         purchaseDto.setUserId(entity.getUser().getUserId());
-        purchaseDto.setPrice(entity.getPrice());
-        List<Long> listGiftCertificateId = entity.getListGiftCertificate().stream().map(s -> s.getId()).collect(Collectors.toList());
+        List<Long> listGiftCertificateId = entity.getListGiftCertificate().stream().map(GiftCertificate::getId).collect(Collectors.toList());
         purchaseDto.setListGiftCertificate(listGiftCertificateId);
         return purchaseDto;
     }
@@ -45,7 +44,6 @@ public class PurchaseConverter {
         User user = new User();
         user.setUserId(entity.getUserId());
         purchase.setUser(user);
-        purchase.setPrice(entity.getPrice());
         List<GiftCertificate> listGiftCertificate = new ArrayList<>();
         for (Long id : entity.getListGiftCertificate()
         ) {

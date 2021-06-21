@@ -1,9 +1,10 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
-import com.epam.esm.dao.impl.TagDaoImpl;
-import com.epam.esm.dao.TagDao;
+import com.epam.esm.dao.GiftCertificateRepository;
+import com.epam.esm.dao.PurchaseRepository;
+import com.epam.esm.dao.TagRepository;
+import com.epam.esm.dao.entity.GiftCertificate;
+import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.model.dto.*;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exeption.RecourseExistException;
@@ -26,44 +27,57 @@ class CertificateServiceImplTest {
     @InjectMocks
     private CertificateService certificateService;
     @Mock
-    GiftCertificateDao certificateDao;
+    GiftCertificateRepository giftCertificateRepository;
     @Mock
-    TagDao tagDao;
-    GiftCertificateDto giftCertificate;
+    TagRepository tagRepository;
+    @Mock
+    PurchaseRepository purchaseRepository;
+
+    GiftCertificate giftCertificate;
+    GiftCertificateDto giftCertificateDto;
 
     @BeforeEach
     public void setUp() {
-        certificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
-        tagDao = Mockito.mock(TagDaoImpl.class);
-        certificateService = new CertificateServiceImpl(certificateDao, tagDao);
-        giftCertificate = new GiftCertificateDto();
+        giftCertificateRepository = Mockito.mock(GiftCertificateRepository.class);
+        tagRepository = Mockito.mock(TagRepository.class);
+        purchaseRepository = Mockito.mock(PurchaseRepository.class);
+        certificateService = new CertificateServiceImpl(giftCertificateRepository, tagRepository, purchaseRepository);
+        giftCertificate = new GiftCertificate();
         giftCertificate.setId(7L);
         giftCertificate.setName("testName");
         giftCertificate.setDescription("testDescription");
         giftCertificate.setDuration(1);
         giftCertificate.setPrice(BigDecimal.valueOf(10.15));
         giftCertificate.setCreateDate(LocalDateTime.now());
-        giftCertificate.setLastUpdateDate(LocalDateTime.now());
+        giftCertificate.setLastUpdateDate(giftCertificate.getCreateDate());
+        giftCertificateDto = new GiftCertificateDto();
+        giftCertificateDto.setId(7L);
+        giftCertificateDto.setName("testName");
+        giftCertificateDto.setDescription("testDescription");
+        giftCertificateDto.setDuration(1);
+        giftCertificateDto.setPrice(BigDecimal.valueOf(10.15));
+        giftCertificateDto.setCreateDate(giftCertificate.getCreateDate());
+        giftCertificateDto.setLastUpdateDate(giftCertificate.getCreateDate());
     }
 
     @Test
     void findEntityByIdPositive() throws RecourseNotExistException {
         long testId = giftCertificate.getId();
-        Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.of(giftCertificate));
-        assertEquals(giftCertificate, certificateService.findEntityById(testId));
+        Mockito.when(giftCertificateRepository.findById(testId)).thenReturn(Optional.of(giftCertificate));
+        assertEquals(giftCertificateDto, certificateService.findEntityById(testId));
     }
 
     @Test
     void findEntityByIdNegative() {
         long testId = giftCertificate.getId();
-        Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.empty());
+        Mockito.when(giftCertificateRepository.findById(testId)).thenReturn(Optional.empty());
         assertThrows(RecourseNotExistException.class, () -> certificateService.findEntityById(testId));
     }
 
     @Test
     void deleteByIdNegative() {
         long testId = giftCertificate.getId();
-        Mockito.when(certificateDao.findEntityById(testId)).thenReturn(Optional.empty());
+        Mockito.when(giftCertificateRepository.findById(testId)).thenReturn(Optional.empty());
         assertThrows(RecourseNotExistException.class, () -> certificateService.delete(testId));
     }
 
@@ -71,39 +85,34 @@ class CertificateServiceImplTest {
     void addNegative() {
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
         giftCertificateDto.setName("testCertificate");
-        GiftCertificateDto findCertificateDto = new GiftCertificateDto();
-        findCertificateDto.setName("testCertificate");
-        findCertificateDto.setId(7L);
-        Mockito.when(certificateDao.findByName(giftCertificateDto.getName())).thenReturn(Optional.of(findCertificateDto));
+        GiftCertificate findCertificate = new GiftCertificate();
+        findCertificate.setName("testCertificate");
+        findCertificate.setId(7L);
+        Mockito.when(giftCertificateRepository.findByName_AndState(giftCertificateDto.getName(),StateCertificate.ACTIVE)).thenReturn(Optional.of(findCertificate));
         assertThrows(RecourseExistException.class, () -> certificateService.add(giftCertificateDto));
     }
 
-    @Test
-    void add() throws RecourseNotExistException, RecourseExistException {
-        long testId = 1L;
+     @Test
+   void add() throws RecourseNotExistException, RecourseExistException {
+
+        Tag tag = new Tag(1L, "testTag");
         TagDto tagDto = new TagDto(1L, "testTag");
         List<TagDto> tagDtoList = new ArrayList<>();
         tagDtoList.add(tagDto);
+        List<Tag> tagList = new ArrayList<>();
+        tagList.add(tag);
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto(null, "test", "test", 10,
-                BigDecimal.valueOf(10.2), null, null, tagDtoList);
-        GiftCertificateDto giftCertificateCreate = new GiftCertificateDto(1L, "test", "test", 10,
-                BigDecimal.valueOf(10.2), null, null, tagDtoList);
-        Mockito.when(certificateDao.findByName(giftCertificateDto.getName())).thenReturn(Optional.empty());
-        Mockito.when(tagDao.findByName(tagDto.getTagName())).thenReturn(Optional.of(tagDto));
-        Mockito.when(certificateDao.create(giftCertificateDto)).thenReturn(giftCertificateCreate);
+                BigDecimal.valueOf(10.2), null, null,StateCertificate.ACTIVE, tagDtoList);
+        GiftCertificate giftCertificate = new GiftCertificate(null, "test", "test", 10,
+                BigDecimal.valueOf(10.2), null, null, StateCertificate.ACTIVE,tagList);
+        GiftCertificate giftCertificateCreate = new GiftCertificate(1L, "test", "test", 10,
+                BigDecimal.valueOf(10.2), null, null,StateCertificate.ACTIVE, tagList);
+        Mockito.when(giftCertificateRepository.findByName_AndState(giftCertificateDto.getName(),StateCertificate.ACTIVE))
+                .thenReturn(Optional.empty());
+        Mockito.when(tagRepository.findByTagName(tagDto.getTagName())).thenReturn(Optional.of(tag));
+        Mockito.when(giftCertificateRepository.save(giftCertificate)).thenReturn(giftCertificateCreate);
         GiftCertificateDto expected = new GiftCertificateDto(1L, "test", "test", 10,
-                BigDecimal.valueOf(10.2), null, null, tagDtoList);
+                BigDecimal.valueOf(10.2), null, null, StateCertificate.ACTIVE,tagDtoList);
         assertEquals(expected, certificateService.add(giftCertificateDto));
-    }
-    @Test
-    void update() {
-    }
-
-    @Test
-    void findAll() {
-    }
-
-    @Test
-    void findGiftCertificateListByParams() {
     }
 }

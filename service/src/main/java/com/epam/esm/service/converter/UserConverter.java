@@ -1,6 +1,7 @@
-package com.epam.esm.dao.converter;
+package com.epam.esm.service.converter;
 
 import com.epam.esm.dao.entity.Purchase;
+import com.epam.esm.model.dto.RoleUser;
 import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.dao.entity.User;
 import com.epam.esm.model.dto.*;
@@ -28,6 +29,16 @@ public class UserConverter {
         userDto.setName(entity.getUserName());
         userDto.setSurname(entity.getUserSurname());
         return userDto;
+    }
+    public static User convertRegistrationFrom(UserRegistrationDto entity) {
+        User user = new User();
+        user.setLogin(entity.getLogin());
+        user.setUserSurname(entity.getSurname());
+        user.setUserName(entity.getName());
+        user.setPassword(entity.getPassword());
+        //user.setPassword(Encryptor.hashPassword(entity.getPassword()));
+        user.setRoleUser(RoleUser.ROLE_USER);
+        return user;
     }
 
     public static User convertShortFrom(UseShortDto entity) {

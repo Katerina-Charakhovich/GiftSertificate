@@ -1,4 +1,4 @@
-package com.epam.esm.dao.converter;
+package com.epam.esm.service.converter;
 
 import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.model.dto.TagDto;

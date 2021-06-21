@@ -1,10 +1,12 @@
 package com.epam.esm.dao.entity;
 
+import com.epam.esm.model.dto.RoleUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,6 +25,20 @@ public class User extends CommonEntity {
     String userName;
     @Column(name = "user_surname")
     String userSurname;
-    @OneToMany(mappedBy = "user", orphanRemoval = true,fetch = FetchType.LAZY)
+    @Column(name = "login")
+    String login;
+    @Column(name = "password")
+    String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    RoleUser roleUser;
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     List<Purchase> listPurchase;
+
+    public User(long userId, String userName, String userSurname, List<Purchase> listPurchase) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userSurname = userSurname;
+        this.listPurchase = listPurchase;
+    }
 }

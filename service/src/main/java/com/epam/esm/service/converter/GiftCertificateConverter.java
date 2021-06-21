@@ -1,8 +1,9 @@
-package com.epam.esm.dao.converter;
+package com.epam.esm.service.converter;
 
 import com.epam.esm.dao.entity.GiftCertificate;
 import com.epam.esm.dao.entity.Tag;
 import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.StateCertificate;
 import com.epam.esm.model.dto.TagDto;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class GiftCertificateConverter {
         giftCertificateDto.setDuration(entity.getDuration());
         giftCertificateDto.setLastUpdateDate(entity.getLastUpdateDate());
         giftCertificateDto.setCreateDate(entity.getCreateDate());
+        giftCertificateDto.setState(entity.getState());
         List<TagDto> tags = null;
         if (entity.getListTag() != null) {
             tags = TagConverter.convertTo(entity.getListTag());
@@ -37,6 +39,7 @@ public class GiftCertificateConverter {
         giftCertificate.setDuration(entity.getDuration());
         giftCertificate.setLastUpdateDate(entity.getLastUpdateDate());
         giftCertificate.setCreateDate(entity.getCreateDate());
+        giftCertificate.setState(entity.getState()!=null?entity.getState(): StateCertificate.ACTIVE);
         List<Tag> tags = null;
         if (entity.getListTagDto() != null) {
             tags = TagConverter.convertFrom(entity.getListTagDto());
