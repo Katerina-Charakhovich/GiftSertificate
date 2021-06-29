@@ -18,21 +18,25 @@
             <groupId>com.epam.esm</groupId>
             <artifactId>service</artifactId>
             <version>1.0.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.epam.esm</groupId>
             <artifactId>model</artifactId>
             <version>1.0.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.epam.esm</groupId>
             <artifactId>dao</artifactId>
             <version>1.0.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.epam.esm</groupId>
             <artifactId>web</artifactId>
             <version>1.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -40,11 +44,11 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.8</version>
+                <version>0.8.7</version>
                 <executions>
                     <execution>
                         <id>report-aggregate</id>
-                        <phase>verify</phase>
+                        <phase>test</phase>
                         <goals>
                             <goal>report-aggregate</goal>
                         </goals>
