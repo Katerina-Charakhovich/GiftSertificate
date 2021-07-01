@@ -2,12 +2,10 @@ package com.epam.esm.service.utils;
 
 import com.epam.esm.dao.entity.QGiftCertificate;
 import com.epam.esm.model.dto.StateCertificate;
-import com.epam.esm.model.parameters.CertificateParameter;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GiftCertificateQDsl {
@@ -16,6 +14,9 @@ public class GiftCertificateQDsl {
     private static final String CERTIFICATE_DESCRIPTION = "description";
     private static final String SIGN = "%";
     private static final String PARAMETER_SORT = "sort";
+
+    private GiftCertificateQDsl() {
+    }
 
     /**
      * Method returns BooleanExpression (QueryDsl predicate), according to input parameters
