@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GiftCertificateQDsl {
@@ -50,7 +51,7 @@ public class GiftCertificateQDsl {
                     }
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + CertificateParameter.getByName(param.getKey()).get());
+                    throw new IllegalStateException("Unexpected value: ");
             }
         }
         return expression;
